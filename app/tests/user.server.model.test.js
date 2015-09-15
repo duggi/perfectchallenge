@@ -15,7 +15,7 @@ var user, user2;
 /**
  * Unit tests
  */
-describe('User Model Unit Tests:', function() {
+describe.skip('User Model Unit Tests:', function() {
 	before(function(done) {
 		user = new User({
 			firstName: 'Full',

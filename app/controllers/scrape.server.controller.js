@@ -64,7 +64,9 @@ function getRoster(path) {
 }
 
 exports.perfectchallenge = function(req) {
-	var statWeek = req.param('statWeek') || '';
+	var diff = (new Date().getTime() - new Date(2015, 8, 10).getTime())/(7*24*60*60*1000);
+	var defaultWeek = Math.min(17, Math.max(1, Math.floor(diff)+1));
+	var statWeek = req.param('statWeek') || defaultWeek;
 	return getPlayers('/group/41592?statType=week&statWeek='+statWeek).then(function(playersPage) {
 		var players = playersPage.players;
 		var promises = _.map(players, function(player) {
