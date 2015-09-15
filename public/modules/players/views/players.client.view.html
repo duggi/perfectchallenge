@@ -1,0 +1,35 @@
+<section ng-controller="PlayersController">
+	<div ng-show="loading">Loading...</div>
+	<div ng-hide="loading">
+		<table>
+			<thead>
+				<tr>
+					<th>rank</th>
+					<th>name</th>
+					<th>points</th>
+					<th>unknown count</th>
+					<th>unknown positions</th>
+					<th>known positions</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="player in players">
+					<td>{{player.unverifiedRank}}</td>
+					<td>
+						<a target="_blank" href="http://perfectchallenge.fantasy.nfl.com{{player.url}}">{{player.name}}</a>
+					</td>
+					<td>{{player.unverifiedPoints | number : 1}}</td>
+					<td>{{player.unknownCount}}</td>
+					<td>{{player.unknownPositions}}</td>
+					<td>
+						<span ng-repeat="fbPlayer in player.roster">
+							<span ng-show="fbPlayer.known">
+								{{fbPlayer.position}}: {{fbPlayer.firstName}} {{fbPlayer.lastName | limitTo : 1}} ({{fbPlayer.pts}})
+							</span>
+						</span>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</section>
