@@ -21,7 +21,7 @@ function getPlayers(path, players) {
 				url : $('a', tr).attr('href'),
 				verifiedPoints : $('.groupEntryPts', tr).text()
 			};
-			if (!_.find(players, {rank:player.rank})) {
+			if (!_.find(players, {name:player.name})) {
 				players.push(player);
 			}
 		});
@@ -29,7 +29,11 @@ function getPlayers(path, players) {
 		if (nextUrl) {
 			return getPlayers(nextUrl, players);
 		} else {
-			return players;
+			var week = parseInt($('.week-selector .label').text().split(' ')[1]);
+			return {
+				players : players,
+				week : week
+			};
 		}
 	});
 }
@@ -60,9 +64,11 @@ function getRoster(path) {
 }
 
 exports.perfectchallenge = function(req) {
-	return getPlayers('/group/41592?statType=week').then(function(players) {
+	var statWeek = req.param('statWeek') || '';
+	return getPlayers('/group/41592?statType=week&statWeek='+statWeek).then(function(playersPage) {
+		var players = playersPage.players;
 		var promises = _.map(players, function(player) {
-			return getRoster(player.url);
+			return getRoster(player.url+'&week='+statWeek);
 		});
 		return q.all(promises).then(function(rosters) {
 			_.each(rosters, function(roster, i) {
@@ -78,7 +84,8 @@ exports.perfectchallenge = function(req) {
 			_.each(players, function(player, i) {
 				player.unverifiedRank = (i+1);
 			});
-			return players;
+			playersPage.players = players;
+			return playersPage;
 		});
 	});
 };

@@ -1,6 +1,12 @@
 <section ng-controller="PlayersController">
 	<span class="loader" ng-show="loading"></span>
 	<div ng-hide="loading">
+		<div>
+			Week:
+			<select ng-model="selectedWeek" ng-change="changeWeek()">
+				<option ng-repeat="i in allWeeks" ng-selected="i===selectedWeek" value="{{i}}">{{i}}</option>
+			</select>
+		</div>
 		<table>
 			<thead>
 				<tr>
