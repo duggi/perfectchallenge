@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('players').controller('PlayersController', ['$scope', '$http', '$stateParams',
-	function($scope, $http, $stateParams) {
+angular.module('players').controller('PlayersController', ['$scope', '$http', '$state', '$stateParams',
+	function($scope, $http, $state, $stateParams) {
 		$scope.allWeeks = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17];
 		function fetchStats(week) {
 			$scope.loading = true;
@@ -12,7 +12,7 @@ angular.module('players').controller('PlayersController', ['$scope', '$http', '$
 			});
 		}
 		$scope.changeWeek = function() {
-			fetchStats($scope.selectedWeek);
+			$state.go('players', {statWeek:$scope.selectedWeek});
 		};
 		var statWeek = $stateParams.statWeek || '';
 		fetchStats(statWeek);
