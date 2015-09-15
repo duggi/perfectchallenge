@@ -41,6 +41,7 @@
     "passport-local": "~1.0.0",
     "passport-twitter": "~1.0.2",
     "q": "^1.4.1",
+    "request-promise": "^0.4.3",
     "swig": "~1.4.1"
   },
   "devDependencies": {
