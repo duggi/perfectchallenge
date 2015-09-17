@@ -89,7 +89,7 @@ exports.fetchPlayerPage = function(week) {
 				var unknowns = _.filter(roster, {known:false});
 				players[i].unknownCount = unknowns.length;
 				players[i].unknownPositions = _.map(unknowns, 'position');
-				players[i].unverifiedPoints = _.sum(roster, 'pts') + random.int(0,30);
+				players[i].unverifiedPoints = _.sum(roster, 'pts'); // + random.int(0,30);
 			});
 			players = _.sortBy(players, function(player) {
 				return -1 * player.unverifiedPoints;
