@@ -178,7 +178,10 @@ function calcPlayerDifference(playerNew, playerPageNew, playerPageOld) {
 }
 
 var PLAYER_PHONES = {
-	'80\'s Spaceman' : '+15109674275'
+	'80\'s Spaceman' : '+15109674275',
+	'Cleveland Steamers' : '+14156139817',
+	'Deez Nuts for Prez' : '+16505761388',
+	'Terrible Towelies' : '+14157229175'
 };
 
 function calculateDifference(job) {
