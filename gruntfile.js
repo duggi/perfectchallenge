@@ -3,8 +3,8 @@
 module.exports = function(grunt) {
 	// Unified Watch Object
 	var watchFiles = {
-		serverViews: ['app/views/**/*.*'], 
-		serverJS: ['gruntfile.js', 'server.js', 'config/**/*.js', 'app/**/*.js'],
+		serverViews: ['app/views/**/*.*'],
+		serverJS: ['gruntfile.js', 'server.js', 'worker.js', 'config/**/*.js', 'app/**/*.js'],
 		clientViews: ['public/modules/**/views/**/*.html'],
 		clientJS: ['public/js/*.js', 'public/modules/**/*.js'],
 		clientCSS: ['public/modules/**/*.css'],
@@ -83,11 +83,19 @@ module.exports = function(grunt) {
 			}
 		},
 		nodemon: {
-			dev: {
+			webDev: {
 				script: 'server.js',
 				options: {
 					nodeArgs: ['--debug'],
 					ext: 'js,html',
+					watch: watchFiles.serverViews.concat(watchFiles.serverJS)
+				}
+			},
+			workerDev: {
+				script: 'worker.js',
+				options: {
+					nodeArgs: ['--debug=5859'],
+					ext: 'js',
 					watch: watchFiles.serverViews.concat(watchFiles.serverJS)
 				}
 			}
@@ -105,15 +113,16 @@ module.exports = function(grunt) {
 				}
 			}
 		},
-        ngmin: {
-            production: {
-                files: {
-                    'public/dist/application.js': '<%= applicationJavaScriptFiles %>'
-                }
-            }
-        },
+		ngmin: {
+			production: {
+				files: {
+					'public/dist/application.js': '<%= applicationJavaScriptFiles %>'
+				}
+			}
+		},
 		concurrent: {
-			default: ['nodemon', 'watch'],
+			default: ['nodemon:webDev', 'watch'],
+			all: ['nodemon:webDev', 'nodemon:workerDev', 'watch'],
 			debug: ['nodemon', 'watch', 'node-inspector'],
 			options: {
 				logConcurrentOutput: true
@@ -155,6 +164,8 @@ module.exports = function(grunt) {
 
 	// Default task(s).
 	grunt.registerTask('default', ['lint', 'concurrent:default']);
+
+	grunt.registerTask('all', ['lint', 'concurrent:all']);
 
 	// Debug task.
 	grunt.registerTask('debug', ['lint', 'concurrent:debug']);

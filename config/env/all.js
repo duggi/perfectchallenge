@@ -1,6 +1,8 @@
 'use strict';
 
 module.exports = {
+	rabbit: process.env.CLOUDAMQP_URL || 'amqp://localhost',
+	workerConcurrency : process.env.WORKER_CONCURRENCY || 1,
 	app: {
 		title: 'perfectchallenge',
 		description: 'Full-Stack JavaScript with MongoDB, Express, AngularJS, and Node.js',
