@@ -10,6 +10,13 @@ var mongoose = require('mongoose');
 var PlayerPage = mongoose.model('PlayerPage');
 var qM = require('../utils/queue-manager');
 var random = require('../utils/random');
+var sms = require('../utils/sms');
+
+
+function calcDefaultWeek() {
+	var diff = (new Date().getTime() - new Date(2015, 8, 10).getTime())/(7*24*60*60*1000);
+	return Math.min(17, Math.max(1, Math.floor(diff)+1));
+}
 
 function getPlayers(path, players) {
 	players = players || [];
@@ -70,6 +77,7 @@ function getRoster(path) {
 }
 
 exports.fetchPlayerPage = function(week) {
+	week = week || calcDefaultWeek();
 	return getPlayers('/group/41592?statType=week&statWeek='+week).then(function(playersPage) {
 		var players = playersPage.players;
 		var promises = _.map(players, function(player) {
@@ -81,7 +89,7 @@ exports.fetchPlayerPage = function(week) {
 				var unknowns = _.filter(roster, {known:false});
 				players[i].unknownCount = unknowns.length;
 				players[i].unknownPositions = _.map(unknowns, 'position');
-				players[i].unverifiedPoints = _.sum(roster, 'pts'); // + random.int(0,30);
+				players[i].unverifiedPoints = _.sum(roster, 'pts') + random.int(0,30);
 			});
 			players = _.sortBy(players, function(player) {
 				return -1 * player.unverifiedPoints;
@@ -97,6 +105,7 @@ exports.fetchPlayerPage = function(week) {
 
 function fetchAndSavePlayerPage(job) {
 	var week = job.week;
+	week = week || calcDefaultWeek();
 	return exports.fetchPlayerPage(week).then(function(playerPage) {
 		return PlayerPage.findOne({week:week}).sort({createdAt:-1}).exec().then(function(playerPageDb) {
 			if (!playerPageDb) {
@@ -155,16 +164,22 @@ function calcPlayerDifference(playerNew, playerPageNew, playerPageOld) {
 	var playersPassed = removeFrom(playersAheadOld, playersAheadNew);
 	var playersPassedMe = removeFrom(playersBehindOld, playersBehindNew);
 	if (playerNew.unverifiedRank !== playerOld.unverifiedRank || playersPassed.length || playersPassedMe.length) {
-		var text = 'You ('+playerNew.name+') are ranked #'+playerNew.unverifiedRank+'.';
+		var text = 'You ('+playerNew.name+') are currently ranked #'+playerNew.unverifiedRank+' this week.';
 		if (playersPassed.length) {
-			text += ' You passed '+names(playersPassed) + '.';
+			text += ' You just passed '+names(playersPassed) + '.';
 		}
 		if (playersPassedMe.length) {
-			text += ' You were passed by '+names(playersPassedMe) + '.';
+			text += ' You were just passed by '+names(playersPassedMe) + '.';
 		}
-		console.log(text);
+		return text;
+	} else {
+		return null;
 	}
 }
+
+var PLAYER_PHONES = {
+	'80\'s Spaceman' : '+15109674275'
+};
 
 function calculateDifference(job) {
 	var week = job.week;
@@ -176,13 +191,16 @@ function calculateDifference(job) {
 		var playerPageNew = playerPages[0];
 		var playerPageOld = playerPages[1];
 		_.each(playerPageNew.players, function(playerNew) {
-			calcPlayerDifference(playerNew, playerPageNew, playerPageOld);
+			var text = calcPlayerDifference(playerNew, playerPageNew, playerPageOld);
+			if (text && PLAYER_PHONES[playerNew.name]) {
+				sms.sendQueued(PLAYER_PHONES[playerNew.name], text);
+			}
 		});
 		return true;
 	});
 }
 
-exports.registerScrapers = function() {
+exports.registerHandlers = function() {
 	qM.registerHandler(qM.PLAYER_LIST_QUEUE, fetchAndSavePlayerPage);
 	qM.registerHandler(qM.CALC_DIFFERENCE_QUEUE, calculateDifference);
 };

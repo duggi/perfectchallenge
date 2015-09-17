@@ -3,6 +3,10 @@
 module.exports = {
 	rabbit: process.env.CLOUDAMQP_URL || 'amqp://localhost',
 	workerConcurrency : process.env.WORKER_CONCURRENCY || 1,
+	nexmo: {
+		apiKey: process.env.NEXMO_APIKEY || 'API_KEY',
+		secret: process.env.NEXMO_SECRET || 'SECRET'
+	},
 	app: {
 		title: 'perfectchallenge',
 		description: 'Full-Stack JavaScript with MongoDB, Express, AngularJS, and Node.js',
