@@ -183,7 +183,14 @@ var PLAYER_PHONES = {
 	'Deez Nuts for Prez' : '+16505761388',
 	'Terrible Towelies' : '+14157229175'
 };
-
+/*
+var PLAYER_PHONES = {
+	'80\'s Spaceman' : '+15109674275',
+	'Cleveland Steamers' : '+15109674275',
+	'Deez Nuts for Prez' : '+15109674275',
+	'Terrible Towelies' : '+15109674275'
+};
+*/
 function calculateDifference(job) {
 	var week = job.week;
 	return PlayerPage.find({week:week}).sort({createdAt:-1}).limit(2).exec().then(function(playerPages) {
@@ -193,10 +200,15 @@ function calculateDifference(job) {
 		}
 		var playerPageNew = playerPages[0];
 		var playerPageOld = playerPages[1];
+		var sentCount = 0;
 		_.each(playerPageNew.players, function(playerNew) {
 			var text = calcPlayerDifference(playerNew, playerPageNew, playerPageOld);
 			if (text && PLAYER_PHONES[playerNew.name]) {
-				sms.sendQueued(PLAYER_PHONES[playerNew.name], text);
+				// need to throttle sending. This is a bit hacky
+				setTimeout(function() {
+					sms.sendQueued(PLAYER_PHONES[playerNew.name], text);
+				}, sentCount*2000);
+				sentCount++;
 			}
 		});
 		return true;
