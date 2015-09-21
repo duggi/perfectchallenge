@@ -155,7 +155,24 @@ function names(playerArr) {
 	return s;
 }
 
-function calcPlayerDifference(playerNew, playerPageNew, playerPageOld) {
+function namesFb(fbPlayerArr) {
+	var s = '';
+	for(var i = 0; i < fbPlayerArr.length; i++) {
+		s += fbPlayerArr[i].firstName + ' '+fbPlayerArr[i].lastName[0]+' ('+fbPlayerArr[i].ptsJustScored.toFixed(1)+')';
+		if (i === fbPlayerArr.length-2) {
+			s+= ' and ';
+		} else if (i < fbPlayerArr.length-2) {
+			s += ', ';
+		}
+	}
+	return s;
+}
+
+function nameAndPos(fbPlayer) {
+	return fbPlayer.firstName+'-'+fbPlayer.lastName+'-'+fbPlayer.position;
+}
+
+function calcPlayerDifference(playerNew, playerPageNew, playerPageOld, fbPlayerScores) {
 	var playersAheadNew = playerPageNew.players.slice(0, playerNew.unverifiedRank-1);
 	var playersBehindNew = playerPageNew.players.slice(playerNew.unverifiedRank);
 	var playerOld = _.find(playerPageOld.players, {name:playerNew.name});
@@ -166,10 +183,30 @@ function calcPlayerDifference(playerNew, playerPageNew, playerPageOld) {
 	if (playerNew.unverifiedRank !== playerOld.unverifiedRank || playersPassed.length || playersPassedMe.length) {
 		var text = 'You ('+playerNew.name+') are currently ranked #'+playerNew.unverifiedRank+' this week.';
 		if (playersPassed.length) {
-			text += ' You just passed '+names(playersPassed) + '.';
+			var scoringFbPlayers = _.filter(fbPlayerScores, function(fbPlayer) {
+				return _.any(playerNew.roster, function(onTeamFbPlayer) {
+					return nameAndPos(onTeamFbPlayer) === nameAndPos(fbPlayer);
+				});
+			});
+			if (scoringFbPlayers.length) {
+				text += ' Thanks to '+namesFb(scoringFbPlayers) + ' you just passed '+names(playersPassed) + '.';
+			} else {
+				text += ' You just passed '+names(playersPassed) + '.';
+			}
 		}
 		if (playersPassedMe.length) {
-			text += ' You were just passed by '+names(playersPassedMe) + '.';
+			var scoringFbPlayers2 = _.filter(fbPlayerScores, function(fbPlayer) {
+				return _.any(playersPassedMe, function(playerPassed) {
+					return _.any(playerPassed.roster, function(onTeamFbPlayer) {
+						return nameAndPos(onTeamFbPlayer) === nameAndPos(fbPlayer);
+					});
+				});
+			});
+			text += ' You were just passed by '+names(playersPassedMe);
+			if (scoringFbPlayers2.length) {
+				text += ' thanks to '+namesFb(scoringFbPlayers2);
+			}
+			text += '.';
 		}
 		return text;
 	} else {
@@ -191,18 +228,49 @@ var PLAYER_PHONES = {
 	'Terrible Towelies' : '+15109674275'
 };
 */
+
+function calcFbPlayerScores(playerPageNew, playerPageOld) {
+	var allFbPlayers = {};
+	_.each(playerPageNew.players, function(player) {
+		_.each(player.roster, function(fbPlayer) {
+			if (fbPlayer.known && !allFbPlayers[nameAndPos(fbPlayer)]) {
+				var fbPlayerCopy = _.clone(fbPlayer);
+				fbPlayerCopy.ptsJustScored = fbPlayerCopy.pts;
+				allFbPlayers[nameAndPos(fbPlayerCopy)] = fbPlayerCopy;
+			}
+		});
+	});
+	_.each(playerPageOld.players, function(player) {
+		_.each(player.roster, function(fbPlayer) {
+			if (fbPlayer.known && !allFbPlayers[nameAndPos(fbPlayer)].calculatedJustScored) {
+				allFbPlayers[nameAndPos(fbPlayer)].ptsJustScored -= fbPlayer.pts;
+				allFbPlayers[nameAndPos(fbPlayer)].calculatedJustScored = true;
+			}
+		});
+	});
+	allFbPlayers = _.filter(allFbPlayers, function(fbPlayer) {
+		return fbPlayer.ptsJustScored !== 0;
+	});
+	allFbPlayers = _.sortBy(allFbPlayers, function(fbPlayer) {
+		return fbPlayer.ptsJustScored*-1;
+	});
+	return allFbPlayers;
+}
+
 function calculateDifference(job) {
-	var week = job.week;
+	var week = job.week || calcDefaultWeek();
 	return PlayerPage.find({week:week}).sort({createdAt:-1}).limit(2).exec().then(function(playerPages) {
 		if (playerPages.length !== 2) {
-			console.err('can not calculate difference didnt get to items');
+			console.error('can not calculate difference didnt get two items');
 			return;
 		}
 		var playerPageNew = playerPages[0];
 		var playerPageOld = playerPages[1];
 		var sentCount = 0;
+		var fbPlayerScores = calcFbPlayerScores(playerPageNew, playerPageOld);
 		_.each(playerPageNew.players, function(playerNew) {
-			var text = calcPlayerDifference(playerNew, playerPageNew, playerPageOld);
+			var text = calcPlayerDifference(playerNew, playerPageNew, playerPageOld, fbPlayerScores);
+			l(text);
 			if (text && PLAYER_PHONES[playerNew.name]) {
 				// need to throttle sending. This is a bit hacky
 				setTimeout(function() {
