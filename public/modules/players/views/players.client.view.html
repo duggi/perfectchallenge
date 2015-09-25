@@ -30,7 +30,10 @@
 					<td>
 						<span ng-repeat="fbPlayer in player.roster">
 							<span ng-show="fbPlayer.known">
-								{{fbPlayer.position}}: {{fbPlayer.firstName}} {{fbPlayer.lastName | limitTo : 1}} ({{fbPlayer.pts}})
+								{{fbPlayer.position}}: {{fbPlayer.firstName}}
+								{{fbPlayer.lastName | limitTo : 1}}
+								<span ng-show="fbPlayer.team"> - {{fbPlayer.team}}</span>
+								({{fbPlayer.pts}})
 							</span>
 						</span>
 					</td>

@@ -66,6 +66,9 @@ function getRoster(path) {
 				fbPlayer.lastName = $('.last-name', slot).text();
 				fbPlayer.pct = parseFloat($('.pct em', slot).text());
 				fbPlayer.pts = parseFloat($('.pts em', slot).text());
+				var src = $('.pill img', slot).attr('src');
+				var team = src.split('-')[1].split('_')[0];
+				fbPlayer.team = team;
 				fbPlayer.known = true;
 			} else {
 				fbPlayer.known = false;
