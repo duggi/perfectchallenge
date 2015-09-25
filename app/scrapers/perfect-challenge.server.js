@@ -181,8 +181,8 @@ function calcPlayerDifference(playerNew, playerPageNew, playerPageOld, fbPlayerS
 	var playerOld = _.find(playerPageOld.players, {name:playerNew.name});
 	var playersAheadOld = playerPageOld.players.slice(0, playerOld.unverifiedRank-1);
 	var playersBehindOld = playerPageOld.players.slice(playerOld.unverifiedRank);
-	var playersPassed = removeFrom(playersAheadOld, playersAheadNew);
-	var playersPassedMe = removeFrom(playersBehindOld, playersBehindNew);
+	var playersPassed = removeFrom(playersBehindNew, playersBehindOld);
+	var playersPassedMe = removeFrom(playersAheadNew, playersAheadOld);
 	if (playerNew.unverifiedRank !== playerOld.unverifiedRank || playersPassed.length || playersPassedMe.length) {
 		var text = 'You ('+playerNew.name+') are currently ranked #'+playerNew.unverifiedRank+' this week.';
 		if (playersPassed.length) {
