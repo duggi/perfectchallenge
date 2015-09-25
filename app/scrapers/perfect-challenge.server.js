@@ -6,7 +6,6 @@ var q = require('q');
 var l = require('../utils/logging');
 var _ = require('lodash');
 var cheerio = require('cheerio');
-var mongoose = require('mongoose');
 var PlayerPage = mongoose.model('PlayerPage');
 var qM = require('../utils/queue-manager');
 var random = require('../utils/random');
@@ -280,7 +279,7 @@ function calculateDifference(job) {
 			if (text && PLAYER_PHONES[playerNew.name]) {
 				// need to throttle sending. This is a bit hacky
 				setTimeout(function() {
-					sms.sendQueued(PLAYER_PHONES[playerNew.name], text);
+					sms.sendQueued(playerNew.name, PLAYER_PHONES[playerNew.name], text);
 				}, sentCount*2000);
 				sentCount++;
 			}

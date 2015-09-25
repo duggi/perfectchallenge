@@ -4,6 +4,9 @@ var q = require('q');
 var _ = require('lodash');
 var Nexmo = require('easynexmo');
 var qM = require('./queue-manager');
+var mongoose = require('mongoose');
+var Sms = mongoose.model('Sms');
+var config = require('../../config/config');
 
 var testNumbers = ['1111111111','2222222222','3333333333','4444444444','5555555555',
 	'6666666666','7777777777','8888888888','9999999999', '+14155553333', '+639185553333'];
@@ -32,11 +35,15 @@ exports.send = function(phoneNumber, message) {
 };
 
 function sendJob(job) {
-	return exports.send(job.phoneNumber, job.message);
+	return Sms.create(job).then(function() {
+		if (!config.nexmo.disableSend) {
+			return exports.send(job.phoneNumber, job.message);
+		}
+	});
 }
 
-exports.sendQueued = function(phoneNumber, message) {
-	qM.add(qM.SMS_QUEUE, {phoneNumber:phoneNumber, message:message});
+exports.sendQueued = function(name, phoneNumber, message) {
+	qM.add(qM.SMS_QUEUE, {name:name, phoneNumber:phoneNumber, message:message});
 };
 
 exports.registerHandlers = function() {

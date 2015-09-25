@@ -5,6 +5,11 @@ module.exports = {
 	app: {
 		title: 'perfectchallenge - Development Environment'
 	},
+	nexmo: {
+		apiKey: process.env.NEXMO_APIKEY || 'API_KEY',
+		secret: process.env.NEXMO_SECRET || 'SECRET',
+		disableSend: true
+	},
 	facebook: {
 		clientID: process.env.FACEBOOK_ID || 'APP_ID',
 		clientSecret: process.env.FACEBOOK_SECRET || 'APP_SECRET',

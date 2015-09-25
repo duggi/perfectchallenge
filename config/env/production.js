@@ -24,6 +24,10 @@ module.exports = {
 		css: 'public/dist/application.min.css',
 		js: 'public/dist/application.min.js'
 	},
+	nexmo: {
+		apiKey: process.env.NEXMO_APIKEY || 'API_KEY',
+		secret: process.env.NEXMO_SECRET || 'SECRET'
+	},
 	facebook: {
 		clientID: process.env.FACEBOOK_ID || 'APP_ID',
 		clientSecret: process.env.FACEBOOK_SECRET || 'APP_SECRET',
