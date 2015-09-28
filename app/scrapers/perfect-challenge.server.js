@@ -185,11 +185,21 @@ function calcPlayerDifference(playerNew, playerPageNew, playerPageOld, fbPlayerS
 	if (playerNew.unverifiedRank !== playerOld.unverifiedRank || playersPassed.length || playersPassedMe.length) {
 		var text = 'You ('+playerNew.name+') are currently ranked #'+playerNew.unverifiedRank+' this week.';
 		if (playersPassed.length) {
+			// players on my roster the scored.
 			var scoringFbPlayers = _.filter(fbPlayerScores, function(fbPlayer) {
 				return _.any(playerNew.roster, function(onTeamFbPlayer) {
 					return nameAndPos(onTeamFbPlayer) === nameAndPos(fbPlayer);
 				});
 			});
+			// remove players if they are also on the roster of everyone I passed.
+			scoringFbPlayers = _.filter(scoringFbPlayers, function(fbPlayer) {
+				return !_.all(playersPassed, function(playerPassed) {
+					return _.any(playerPassed.roster, function(onTeamFbPlayer) {
+						return nameAndPos(onTeamFbPlayer) === nameAndPos(fbPlayer);
+					});
+				});
+			});
+
 			if (scoringFbPlayers.length) {
 				text += ' Thanks to '+namesFb(scoringFbPlayers) + ' you just passed '+names(playersPassed) + '.';
 			} else {
@@ -197,11 +207,18 @@ function calcPlayerDifference(playerNew, playerPageNew, playerPageOld, fbPlayerS
 			}
 		}
 		if (playersPassedMe.length) {
+			// scoring fbPlayers that caused me to be passed. (ie on playerPassedMe rosters)
 			var scoringFbPlayers2 = _.filter(fbPlayerScores, function(fbPlayer) {
 				return _.any(playersPassedMe, function(playerPassed) {
 					return _.any(playerPassed.roster, function(onTeamFbPlayer) {
 						return nameAndPos(onTeamFbPlayer) === nameAndPos(fbPlayer);
 					});
+				});
+			});
+			// remove fbPlayers that are on my team. (They didn't cause me to be passed)
+			scoringFbPlayers2 = _.filter(scoringFbPlayers2, function(fbPlayer) {
+				return !_.any(playerNew.roster, function(onTeamFbPlayer) {
+					return nameAndPos(onTeamFbPlayer) === nameAndPos(fbPlayer);
 				});
 			});
 			text += ' You were just passed by '+names(playersPassedMe);
@@ -254,7 +271,7 @@ function calcFbPlayerScores(playerPageNew, playerPageOld) {
 		});
 	});
 	allFbPlayers = _.filter(allFbPlayers, function(fbPlayer) {
-		return fbPlayer.ptsJustScored !== 0;
+		return fbPlayer.ptsJustScored > 0;
 	});
 	allFbPlayers = _.sortBy(allFbPlayers, function(fbPlayer) {
 		return fbPlayer.ptsJustScored*-1;
