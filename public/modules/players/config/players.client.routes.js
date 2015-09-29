@@ -6,7 +6,7 @@ angular.module('players').config(['$stateProvider',
 		// Players state routing
 		$stateProvider.
 			state('players', {
-				url: '/?week',
+				url: '/?stat',
 				templateUrl: 'modules/players/views/players.client.view.html'
 			});
 	}

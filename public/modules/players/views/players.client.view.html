@@ -3,9 +3,9 @@
 	<div ng-hide="loading">
 		<div>
 			Stats for:
-			<select ng-model="selectedWeek" ng-change="changeWeek()">
-				<option ng-repeat="i in allWeeks" ng-selected="i===selectedWeek" value="{{i}}">
-					{{i!=='overall'?'week ':''}}{{i}}
+			<select ng-model="selectedStat" ng-change="changeWeek()">
+				<option ng-repeat="i in allStats" ng-selected="i===selectedStat" value="{{i}}">
+					{{$index>2?'week ':''}}{{i}}
 				</option>
 			</select>
 		</div>
@@ -15,21 +15,21 @@
 					<th>rank</th>
 					<th>name</th>
 					<th>points</th>
-					<th ng-hide="overall">unknown count</th>
-					<th ng-hide="overall">unknown positions</th>
-					<th ng-hide="overall">known positions</th>
+					<th ng-show="stat === 'week'">unknown count</th>
+					<th ng-show="stat === 'week'">unknown positions</th>
+					<th ng-show="stat === 'week'">known positions</th>
 				</tr>
 			</thead>
 			<tbody>
 				<tr ng-repeat="player in players">
 					<td>{{player.unverifiedRank}}</td>
 					<td>
-						<a target="_blank" href="http://perfectchallenge.fantasy.nfl.com{{player.url}}">{{player.name}}</a>
+						<a target="_blank" href="{{player.url}}">{{player.name}}</a>
 					</td>
 					<td>{{player.unverifiedPoints | number : 1}}</td>
-					<td ng-hide="overall">{{player.unknownCount}}</td>
-					<td ng-hide="overall">{{player.unknownPositions}}</td>
-					<td ng-hide="overall">
+					<td ng-show="stat === 'week'">{{player.unknownCount}}</td>
+					<td ng-show="stat === 'week'">{{player.unknownPositions}}</td>
+					<td ng-show="stat === 'week'">
 						<span ng-repeat="fbPlayer in player.roster">
 							<span ng-show="fbPlayer.known">
 								{{fbPlayer.position}}: {{fbPlayer.firstName}}

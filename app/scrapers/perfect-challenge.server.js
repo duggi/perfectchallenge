@@ -29,7 +29,7 @@ function getPlayers(path, players) {
 			var player = {
 				rank : $('.groupEntryRank', tr).text(),
 				name : $('a', tr).text(),
-				url : $('a', tr).attr('href'),
+				url : 'http://perfectchallenge.fantasy.nfl.com' + $('a', tr).attr('href'),
 				verifiedPoints : $('.groupEntryPts', tr).text()
 			};
 			if (!_.find(players, {name:player.name})) {
@@ -45,12 +45,13 @@ function getPlayers(path, players) {
 				var week = parseInt($('.week-selector .label').text().split(' ')[1]);
 				return {
 					players : players,
-					week : week
+					week : week,
+					stat : 'week'
 				};
 			} else {
 				return {
 					players : players,
-					overall : true
+					stat : 'overall'
 				};
 			}
 		}
@@ -59,6 +60,9 @@ function getPlayers(path, players) {
 
 function getRoster(path) {
 	var url = 'http://perfectchallenge.fantasy.nfl.com'+path;
+	if (path.indexOf('http://')===0) {
+		url = path;
+	}
 	l('fetching '+url);
 	return q(request(url)).then(function(data) {
 		var $ = cheerio.load(data);
