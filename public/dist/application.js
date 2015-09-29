@@ -226,7 +226,7 @@ angular.module('players').config([
   function ($stateProvider) {
     // Players state routing
     $stateProvider.state('players', {
-      url: '/?statWeek',
+      url: '/?week',
       templateUrl: 'modules/players/views/players.client.view.html'
     });
   }
@@ -234,9 +234,11 @@ angular.module('players').config([
 angular.module('players').controller('PlayersController', [
   '$scope',
   '$http',
+  '$state',
   '$stateParams',
-  function ($scope, $http, $stateParams) {
+  function ($scope, $http, $state, $stateParams) {
     $scope.allWeeks = [
+      'overall',
       1,
       2,
       3,
@@ -257,17 +259,21 @@ angular.module('players').controller('PlayersController', [
     ];
     function fetchStats(week) {
       $scope.loading = true;
-      $http.get('/scrape/perfectchallenge?statWeek=' + week).then(function (response) {
+      $http.get('/scrape/perfectchallenge?week=' + week).then(function (response) {
         $scope.players = response.data.players;
         $scope.selectedWeek = response.data.week;
+        $scope.overall = response.data.overall;
+        if ($scope.overall) {
+          $scope.selectedWeek = 'overall';
+        }
         $scope.loading = false;
       });
     }
     $scope.changeWeek = function () {
-      fetchStats($scope.selectedWeek);
+      $state.go('players', { week: $scope.selectedWeek });
     };
-    var statWeek = $stateParams.statWeek || '';
-    fetchStats(statWeek);
+    var week = $stateParams.week || '';
+    fetchStats(week);
   }
 ]);'use strict';
 // Config HTTP Error Handling
