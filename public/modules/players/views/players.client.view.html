@@ -5,7 +5,7 @@
 			Stats for:
 			<select ng-model="selectedStat" ng-change="changeWeek()">
 				<option ng-repeat="i in allStats" ng-selected="i===selectedStat" value="{{i}}">
-					{{$index>2?'week ':''}}{{i}}
+					{{$index>3?'week ':''}}{{i}}
 				</option>
 			</select>
 		</div>

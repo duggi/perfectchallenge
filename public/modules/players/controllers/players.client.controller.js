@@ -2,7 +2,7 @@
 
 angular.module('players').controller('PlayersController', ['$scope', '$http', '$state', '$stateParams',
 	function($scope, $http, $state, $stateParams) {
-		$scope.allStats = ['overall', 'overallWithBonus', 'bonus',
+		$scope.allStats = ['overall', 'overallWithBonus', 'divisions', 'bonus',
 			1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17];
 		function fetchStats(stat) {
 			$scope.loading = true;

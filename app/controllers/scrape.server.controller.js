@@ -62,6 +62,31 @@ function overallWithBonus() {
 	});
 }
 
+function divisions() {
+	return overallWithBonus().then(function(playerPageOverall) {
+		var players = playerPageOverall.players;
+		var divisions = [];
+		_.each(players, function(player) {
+			var division = _.find(divisions, function(division) {
+				return division.name === player.division;
+			});
+			if (!division) {
+				division = {
+					name : player.division,
+					unverifiedPoints : player.unverifiedPoints
+				};
+				divisions.push(division);
+			} else {
+				division.unverifiedPoints += player.unverifiedPoints;
+			}
+		});
+		divisions = sortAndRank(divisions);
+		return {
+			players: divisions,
+			stat : 'divisions'
+		};
+	});
+}
 
 exports.perfectchallenge = function(req) {
 	var stat = req.param('stat');
@@ -69,6 +94,8 @@ exports.perfectchallenge = function(req) {
 		return PerfectChallengeScraper.fetchPlayerPageOverall();
 	} else if (stat === 'overallWithBonus') {
 		return overallWithBonus();
+	} else if (stat === 'divisions') {
+		return divisions();
 	} else if (stat === 'bonus') {
 		return scarBonus();
 	} else {
