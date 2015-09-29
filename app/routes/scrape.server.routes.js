@@ -13,6 +13,9 @@ module.exports = function (app) {
 	app.route('/scrape/perfectchallengeQueue')
 		.get(pH.jsonp(scrape.perfectchallengeQueue));
 
+	app.route('/scrape/scarsBonus')
+		.get(pH.jsonp(scrape.scarsBonus));
+
 	app.route('/test/calcDiff')
 		.get(pH.jsonp(function() {
 			qM.add(qM.CALC_DIFFERENCE_QUEUE, {week:1});

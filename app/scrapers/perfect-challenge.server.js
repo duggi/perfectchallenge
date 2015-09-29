@@ -40,11 +40,19 @@ function getPlayers(path, players) {
 		if (nextUrl) {
 			return getPlayers(nextUrl, players);
 		} else {
-			var week = parseInt($('.week-selector .label').text().split(' ')[1]);
-			return {
-				players : players,
-				week : week
-			};
+			var weekPart = $('.week-selector .label').text();
+			if (weekPart) {
+				var week = parseInt($('.week-selector .label').text().split(' ')[1]);
+				return {
+					players : players,
+					week : week
+				};
+			} else {
+				return {
+					players : players,
+					overall : true
+				};
+			}
 		}
 	});
 }
@@ -77,6 +85,27 @@ function getRoster(path) {
 		return fbPlayers;
 	});
 }
+
+exports.fetchPlayerPageOverall = function() {
+	return getPlayers('/group/41592?statType=season').then(function(playersPageOverall) {
+		return exports.fetchPlayerPage().then(function(playerPageThisWeek) {
+			_.each(playersPageOverall.players, function(playerOverall) {
+				var playerThisWeek = _.find(playerPageThisWeek.players, function(player) {
+					return player.name === playerOverall.name;
+				});
+				playerOverall.unverifiedPoints = playerOverall.verifiedPoints - playerThisWeek.verifiedPoints + playerThisWeek.unverifiedPoints;
+			});
+			var players = _.sortBy(playersPageOverall.players, function(player) {
+				return -1 * player.unverifiedPoints;
+			});
+			_.each(players, function(player, i) {
+				player.unverifiedRank = (i+1);
+			});
+			playersPageOverall.players = players;
+			return playersPageOverall;
+		});
+	});
+};
 
 exports.fetchPlayerPage = function(week) {
 	week = week || calcDefaultWeek();
