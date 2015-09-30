@@ -11,7 +11,6 @@ var qM = require('../utils/queue-manager');
 var random = require('../utils/random');
 var sms = require('../utils/sms');
 
-
 function calcDefaultWeek() {
 	var diff = (new Date().getTime() - new Date(2015, 8, 10).getTime())/(7*24*60*60*1000);
 	return Math.min(17, Math.max(1, Math.floor(diff)+1));
@@ -46,7 +45,7 @@ function getPlayers(path, players) {
 				return {
 					players : players,
 					week : week,
-					stat : 'week'
+					stat : 'weekly'
 				};
 			} else {
 				return {

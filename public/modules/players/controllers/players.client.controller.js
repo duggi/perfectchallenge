@@ -2,24 +2,44 @@
 
 angular.module('players').controller('PlayersController', ['$scope', '$http', '$state', '$stateParams',
 	function($scope, $http, $state, $stateParams) {
-		$scope.allStats = ['overall', 'overallWithBonus', 'divisions', 'bonus',
-			1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17];
-		function fetchStats(stat) {
+		$scope.allStats = ['overall', 'weekly', 'divisions', 'divisionsByWeek', 'bonus', 'bonusByWeek'];
+		$scope.allWeeks = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17];
+		function fetchStats() {
 			$scope.loading = true;
-			$http.get('/scrape/perfectchallenge?stat='+stat).then(function(response) {
+			var url = '/scrape/perfectchallenge?';
+			if ($stateParams.stat) {
+				url += '&stat='+$stateParams.stat;
+			}
+			if ($stateParams.week) {
+				url += '&week='+$stateParams.week;
+			}
+			if ($stateParams.bonus) {
+				url += '&bonus='+$stateParams.bonus;
+			}
+			$http.get(url).then(function(response) {
 				$scope.players = response.data.players;
-				$scope.selectedStat = response.data.week;
 				$scope.stat = response.data.stat;
-				if (!$scope.selectedStat) {
-					$scope.selectedStat = $scope.stat;
+				if (response.data.week) {
+					$scope.week = response.data.week;
 				}
+				$scope.bonus = response.data.bonus || false;
 				$scope.loading = false;
 			});
 		}
-		$scope.changeWeek = function() {
-			$state.go('players', {stat:$scope.selectedStat});
+		$scope.changeStat = function() {
+			var newStateParams = {
+				stat:$scope.stat, bonus:$scope.bonus
+			};
+			if ($scope.week && $scope.stat.toLocaleLowerCase().indexOf('week')!==-1) {
+				newStateParams.week = $scope.week;
+			} else {
+				newStateParams.week = '';
+			}
+			if ($scope.stat === 'bonus' || $scope.stat === 'bonusByWeek') {
+				newStateParams.bonus = '';
+			}
+			$state.go('players', newStateParams);
 		};
-		var week = $stateParams.stat || '';
-		fetchStats(week);
+		fetchStats();
 	}
 ]);

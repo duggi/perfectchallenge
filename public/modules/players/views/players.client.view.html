@@ -3,11 +3,23 @@
 	<div ng-hide="loading">
 		<div>
 			Stats for:
-			<select ng-model="selectedStat" ng-change="changeWeek()">
-				<option ng-repeat="i in allStats" ng-selected="i===selectedStat" value="{{i}}">
-					{{$index>3?'week ':''}}{{i}}
+			<select ng-model="stat" ng-change="changeStat()">
+				<option ng-repeat="aStat in allStats" ng-selected="aStat===stat" value="{{aStat}}">
+					{{aStat}}
 				</option>
 			</select>
+		</div>
+		<div ng-show="week">
+			Week:
+			<select ng-model="week" ng-change="changeStat()">
+				<option ng-repeat="aWeek in allWeeks" ng-selected="aWeek===week" value="{{aWeek}}">
+					{{aWeek}}
+				</option>
+			</select>
+		</div>
+		<div ng-hide="stat === 'bonus' || stat === 'bonusByWeek'">
+			Scars Bonus:
+			<input type="checkbox" ng-model="bonus" ng-change="changeStat()" />
 		</div>
 		<table>
 			<thead>
@@ -15,9 +27,9 @@
 					<th>rank</th>
 					<th>name</th>
 					<th>points</th>
-					<th ng-show="stat === 'week'">unknown count</th>
-					<th ng-show="stat === 'week'">unknown positions</th>
-					<th ng-show="stat === 'week'">known positions</th>
+					<th ng-show="stat === 'weekly'">unknown count</th>
+					<th ng-show="stat === 'weekly'">unknown positions</th>
+					<th ng-show="stat === 'weekly'">known positions</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -27,9 +39,9 @@
 						<a target="_blank" href="{{player.url}}">{{player.name}}</a>
 					</td>
 					<td>{{player.unverifiedPoints | number : 1}}</td>
-					<td ng-show="stat === 'week'">{{player.unknownCount}}</td>
-					<td ng-show="stat === 'week'">{{player.unknownPositions}}</td>
-					<td ng-show="stat === 'week'">
+					<td ng-show="stat === 'weekly'">{{player.unknownCount}}</td>
+					<td ng-show="stat === 'weekly'">{{player.unknownPositions}}</td>
+					<td ng-show="stat === 'weekly'">
 						<span ng-repeat="fbPlayer in player.roster">
 							<span ng-show="fbPlayer.known">
 								{{fbPlayer.position}}: {{fbPlayer.firstName}}
