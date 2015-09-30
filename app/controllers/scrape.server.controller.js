@@ -131,11 +131,15 @@ function divisions(promise, stat) {
 			}
 		});
 		divisions = sortAndRank(divisions);
-		return {
+		var playerPageDivisions = {
 			players: divisions,
 			stat : stat,
 			bonus : playerPage.bonus || false
 		};
+		if (playerPage.week) {
+			playerPageDivisions.week = playerPage.week;
+		}
+		return playerPageDivisions;
 	});
 }
 // stat - overall, weekly, division, division by week, bonus, bonus by week
