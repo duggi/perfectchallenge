@@ -265,8 +265,8 @@ function calcPlayerDifference(playerNew, playerPageNew, playerPageOld, fbPlayerS
 	}
 }
 
-var PLAYER_PHONES = {
-	'80\'s Spaceman' : '+15109674275', //jesse
+var PLAYER_PHONES = {};
+/*	'80\'s Spaceman' : '+15109674275', //jesse
 	'Cleveland Steamers' : '+14156139871', //dennis
 	'Deez Nuts for Prez' : '+16505761388', //doug
 //	'Terrible Towelies' : '+14157229175', //rusty
