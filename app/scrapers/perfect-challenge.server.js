@@ -110,6 +110,10 @@ exports.fetchPlayerPageOverall = function() {
 	});
 };
 
+function uniqueFbPlayerName(fbPlayer) {
+	return fbPlayer.position+'-'+fbPlayer.firstName+'-'+fbPlayer.lastName+'-'+fbPlayer.team;
+}
+
 exports.fetchPlayerPage = function(week) {
 	week = week || calcDefaultWeek();
 	return getPlayers('/group/41592?statType=week&statWeek='+week).then(function(playersPage) {
@@ -118,8 +122,23 @@ exports.fetchPlayerPage = function(week) {
 			return getRoster(player.url+'&week='+week);
 		});
 		return q.all(promises).then(function(rosters) {
+			var fbPlayerTimesChoosen = {};
 			_.each(rosters, function(roster, i) {
 				players[i].roster = roster;
+				_.each(roster, function(fbPlayer) {
+					if (fbPlayer.known) {
+						if (!fbPlayerTimesChoosen[uniqueFbPlayerName(fbPlayer)]) {
+							fbPlayerTimesChoosen[uniqueFbPlayerName(fbPlayer)] = 0;
+						}
+						fbPlayerTimesChoosen[uniqueFbPlayerName(fbPlayer)]++;
+					}
+				});
+				_.each(rosters, function(roster, i) {
+					players[i].roster = roster;
+					_.each(roster, function(fbPlayer) {
+						fbPlayer.timesPicked = fbPlayerTimesChoosen[uniqueFbPlayerName(fbPlayer)];
+					});
+				});
 				var unknowns = _.filter(roster, {known:false});
 				players[i].unknownCount = unknowns.length;
 				players[i].unknownPositions = _.map(unknowns, 'position');

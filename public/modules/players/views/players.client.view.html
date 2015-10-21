@@ -43,9 +43,9 @@
 					<td ng-show="stat === 'weekly'">{{player.unknownPositions}}</td>
 					<td ng-show="stat === 'weekly'">
 						<span ng-repeat="fbPlayer in player.roster">
-							<span ng-show="fbPlayer.known">
-								{{fbPlayer.position}}: {{fbPlayer.firstName}}
-								{{fbPlayer.lastName | limitTo : 1}}
+							<span class="{{fbPlayer.timesPicked===1?'unique':fbPlayer.timesPicked>=8?'bandwagon':''}}" ng-show="fbPlayer.known">
+								{{fbPlayer.position}}: {{fbPlayer.firstName | limitTo : 1}}
+								{{fbPlayer.lastName}}
 								<span ng-show="fbPlayer.team"> - {{fbPlayer.team}}</span>
 								({{fbPlayer.pts}})
 							</span>
@@ -54,5 +54,11 @@
 				</tr>
 			</tbody>
 		</table>
+		<div class="unique">
+			green - unique player (only 1 team picked him)
+		</div>
+		<div class="bandwagon">
+			red - bandwagon player (8 or more teams picked him)
+		</div>
 	</div>
 </section>

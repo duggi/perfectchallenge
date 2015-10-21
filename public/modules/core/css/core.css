@@ -116,3 +116,12 @@ table tr:hover td {
 	z-index: 9999;
 	background: url(/modules/core/img/loaders/loader.gif) center no-repeat #fff;
 }
+
+.unique {
+	font-weight: bold;
+	color: green;
+}
+.bandwagon {
+	font-weight: bold;
+	color: firebrick;
+}
