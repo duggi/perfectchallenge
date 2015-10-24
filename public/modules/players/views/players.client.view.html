@@ -1,64 +1,98 @@
 <section ng-controller="PlayersController">
-	<span class="loader" ng-show="loading"></span>
-	<div ng-hide="loading">
-		<div>
-			Stats for:
-			<select ng-model="stat" ng-change="changeStat()">
-				<option ng-repeat="aStat in allStats" ng-selected="aStat===stat" value="{{aStat}}">
-					{{aStat}}
-				</option>
-			</select>
-		</div>
-		<div ng-show="week">
-			Week:
-			<select ng-model="week" ng-change="changeStat()">
-				<option ng-repeat="aWeek in allWeeks" ng-selected="aWeek===week" value="{{aWeek}}">
-					{{aWeek}}
-				</option>
-			</select>
-		</div>
-		<div ng-hide="stat === 'bonus' || stat === 'bonusByWeek'">
-			Scars Bonus:
-			<input type="checkbox" ng-model="bonus" ng-change="changeStat()" />
-		</div>
-		<table>
-			<thead>
-				<tr>
-					<th>rank</th>
-					<th>name</th>
-					<th>points</th>
-					<th ng-show="stat === 'weekly'">unknown count</th>
-					<th ng-show="stat === 'weekly'">unknown positions</th>
-					<th ng-show="stat === 'weekly'">known positions</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr ng-repeat="player in players">
-					<td>{{player.unverifiedRank}}</td>
-					<td>
-						<a target="_blank" href="{{player.url}}">{{player.name}}</a>
-					</td>
-					<td>{{player.unverifiedPoints | number : 1}}</td>
-					<td ng-show="stat === 'weekly'">{{player.unknownCount}}</td>
-					<td ng-show="stat === 'weekly'">{{player.unknownPositions}}</td>
-					<td ng-show="stat === 'weekly'">
-						<span ng-repeat="fbPlayer in player.roster">
-							<span class="{{fbPlayer.timesPicked===1?'unique':fbPlayer.timesPicked>=8?'bandwagon':''}}" ng-show="fbPlayer.known">
-								{{fbPlayer.position}}: {{fbPlayer.firstName | limitTo : 1}}
-								{{fbPlayer.lastName}}
-								<span ng-show="fbPlayer.team"> - {{fbPlayer.team}}</span>
-								({{fbPlayer.pts}})
-							</span>
-						</span>
-					</td>
-				</tr>
-			</tbody>
-		</table>
-		<div class="unique">
-			green - unique player (only 1 team picked him)
-		</div>
-		<div class="bandwagon">
-			red - bandwagon player (8 or more teams picked him)
-		</div>
-	</div>
+  <span class="loader" ng-show="loading"></span>
+  <div ng-hide="loading">
+
+
+    <div class="card player-table-card">
+      <!-- HEADER -->
+      <div class="header">
+        <h2 class="title">
+          Week {{week}} Rankings
+        </h2>
+        <hr>
+        <div class="controls">
+          <div class="row">
+            <div class="col-md-3">
+              <div>
+                Stats for:
+                <select ng-model="stat" ng-change="changeStat()">
+                  <option ng-repeat="aStat in allStats" ng-selected="aStat===stat" value="{{aStat}}">
+                    {{aStat}}
+                  </option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-2">
+              <div ng-show="week">
+                Week:
+                <select ng-model="week" ng-change="changeStat()">
+                  <option ng-repeat="aWeek in allWeeks" ng-selected="aWeek===week" value="{{aWeek}}">
+                    {{aWeek}}
+                  </option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-2">
+              <div ng-hide="stat === 'bonus' || stat === 'bonusByWeek'">
+                Scars Bonus:
+                <input type="checkbox" ng-model="bonus" ng-change="changeStat()" />
+              </div>
+            </div>
+          </div>
+        </div>
+        <hr>
+      </div>
+
+      <!-- CONTENT -->
+      <div class="content">
+        <table class="table table-striped xtable-responsive table-responsive-list">
+          <thead>
+            <tr>
+              <th>Rank</th>
+              <th>Team Name</th>
+              <th>Points</th>
+              <th ng-show="stat === 'weekly'">Unknown Positions</th>
+              <th ng-show="stat === 'weekly'">Known Positions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="player in players">
+              <td data-title="Rank">{{player.unverifiedRank}}</td>
+              <td data-title="Team Name">
+                <a target="_blank" href="{{player.url}}" class="team-name">{{player.name}}</a>
+              </td>
+              <td data-title="Points"><strong>{{player.unverifiedPoints | number : 1}}</strong></td>
+              <td data-title="Unknown Positions" ng-show="stat === 'weekly'">
+                <span class="unknown">
+                  - {{player.unknownCount}} - &nbsp;&nbsp;{{player.unknownPositions}}
+                </span>
+              </td>
+              <td data-title="Known Positions" ng-show="stat === 'weekly'">
+                <span ng-repeat="fbPlayer in player.roster">
+                  <span ng-show="fbPlayer.known" class="fb-player-stat-line {{fbPlayer.timesPicked===1?'unique':fbPlayer.timesPicked>=8?'bandwagon':''}}">
+                    <small class="position-label">{{fbPlayer.position}}:</small>
+                    {{fbPlayer.firstName | limitTo : 1}} {{fbPlayer.lastName}}
+                    <span ng-show="fbPlayer.team"> - {{fbPlayer.team}}</span>
+                    ({{fbPlayer.pts}})
+                  </span>
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- FOOTER -->
+        <div class="footer">
+          <hr>
+          <div class="unique">
+            green - unique player (only 1 team picked him)
+          </div>
+          <div class="bandwagon">
+            red - bandwagon player (8 or more teams picked him)
+          </div>
+        </div>
+      </div>
+
+
+    </div>
 </section>
