@@ -64,13 +64,16 @@
               <td data-title="Points"><strong>{{player.unverifiedPoints | number : 1}}</strong></td>
               <td data-title="Unknown Positions" ng-show="stat === 'weekly'">
                 <span class="unknown">
-                  - {{player.unknownCount}} - &nbsp;&nbsp;{{player.unknownPositions}}
+                  <span class="pill-label">{{player.unknownCount}}</span>
+                  <span ng-repeat="pos in player.unknownPositions track by $index">
+                    / {{pos}}
+                  </span>
                 </span>
               </td>
               <td data-title="Known Positions" ng-show="stat === 'weekly'">
                 <span ng-repeat="fbPlayer in player.roster">
                   <span ng-show="fbPlayer.known" class="fb-player-stat-line {{fbPlayer.timesPicked===1?'unique':fbPlayer.timesPicked>=8?'bandwagon':''}}">
-                    <small class="position-label">{{fbPlayer.position}}:</small>
+                    <small class="pill-label position-label">{{fbPlayer.position}}:</small>
                     {{fbPlayer.firstName | limitTo : 1}} {{fbPlayer.lastName}}
                     <span ng-show="fbPlayer.team"> - {{fbPlayer.team}}</span>
                     ({{fbPlayer.pts}})
