@@ -1,6 +1,3 @@
-@import "https://fonts.googleapis.com/css?family=Lato:400,300,700";
-
-
 /* -------------------------- ANGULAR AND UTIL */
 
 [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
@@ -127,10 +124,12 @@ hr {
 
 .unique {
   color: #797;
+	font-weight: bold;
 }
 
 .bandwagon {
   color: #976;
+	font-weight: bold;
 }
 
 
