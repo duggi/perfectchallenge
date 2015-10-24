@@ -45,31 +45,33 @@
 
       <!-- CONTENT -->
       <div class="content">
-        <table class="table table-striped table-responsive">
+        <table class="table table-striped xtable-responsive table-responsive-list">
           <thead>
             <tr>
-              <th>rank</th>
-              <th>name</th>
-              <th>points</th>
-              <th ng-show="stat === 'weekly'">unknown count</th>
-              <th ng-show="stat === 'weekly'">unknown positions</th>
-              <th ng-show="stat === 'weekly'">known positions</th>
+              <th>Rank</th>
+              <th>Team Name</th>
+              <th>Points</th>
+              <th ng-show="stat === 'weekly'">Unknown Positions</th>
+              <th ng-show="stat === 'weekly'">Known Positions</th>
             </tr>
           </thead>
           <tbody>
             <tr ng-repeat="player in players">
-              <td>{{player.unverifiedRank}}</td>
-              <td>
-                <a target="_blank" href="{{player.url}}">{{player.name}}</a>
+              <td data-title="Rank">{{player.unverifiedRank}}</td>
+              <td data-title="Team Name">
+                <a target="_blank" href="{{player.url}}" class="team-name">{{player.name}}</a>
               </td>
-              <td><strong>{{player.unverifiedPoints | number : 1}}</strong></td>
-              <td ng-show="stat === 'weekly'">{{player.unknownCount}}</td>
-              <td ng-show="stat === 'weekly'">{{player.unknownPositions}}</td>
-              <td ng-show="stat === 'weekly'">
+              <td data-title="Points"><strong>{{player.unverifiedPoints | number : 1}}</strong></td>
+              <td data-title="Unknown Positions" ng-show="stat === 'weekly'">
+                <span class="unknown">
+                  - {{player.unknownCount}} - &nbsp;&nbsp;{{player.unknownPositions}}
+                </span>
+              </td>
+              <td data-title="Known Positions" ng-show="stat === 'weekly'">
                 <span ng-repeat="fbPlayer in player.roster">
-                  <span class="fb-player-stat-line {{fbPlayer.timesPicked===1?'unique':fbPlayer.timesPicked>=8?'bandwagon':''}}" ng-show="fbPlayer.known">
-                    <small class="position-label">{{fbPlayer.position}}:</small> {{fbPlayer.firstName | limitTo : 1}}
-                    {{fbPlayer.lastName}}
+                  <span ng-show="fbPlayer.known" class="fb-player-stat-line {{fbPlayer.timesPicked===1?'unique':fbPlayer.timesPicked>=8?'bandwagon':''}}">
+                    <small class="position-label">{{fbPlayer.position}}:</small>
+                    {{fbPlayer.firstName | limitTo : 1}} {{fbPlayer.lastName}}
                     <span ng-show="fbPlayer.team"> - {{fbPlayer.team}}</span>
                     ({{fbPlayer.pts}})
                   </span>

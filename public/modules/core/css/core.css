@@ -90,10 +90,11 @@ hr {
   height: 148px;
 }
 
+
 /* -- TABLE */
 
 .table > thead > tr > th {  /* lol bootstrap selector */
-  border-bottom: none;
+  border-bottom: 0;
   font-weight: normal;
   font-style: italic;
   font-size: 10px;
@@ -112,6 +113,7 @@ hr {
   white-space: nowrap;
   display: inline-block;
   margin-bottom: .3em;
+  margin-right: .5em;
 }
 
 .position-label {
@@ -120,7 +122,7 @@ hr {
   border-radius: 20px;
   opacity: .7;
   display: inline-block;
-  margin: 0 .1em 0 .5em;
+  margin: 0 .1em 0 0;
 }
 
 .unique {
@@ -129,4 +131,53 @@ hr {
 
 .bandwagon {
   color: #976;
+}
+
+
+/* -- RESPONSIVE TABLE LIST */
+
+.table-responsive-list th {
+  display: none;
+}
+
+.table-responsive-list td {
+  display: block;
+}
+
+.table-responsive-list > tbody > tr > td { /* lol bootsrap selector strikes again */
+  border-top: none;
+  padding: 4px;
+}
+
+.table-responsive-list td:before {
+  content: attr(data-title) ": ";
+  width: 6.5em;
+  display: inline-block;
+  color: #999;
+  border-right: 1px dotted #999;
+  margin-right: 1em;
+}
+
+.table-responsive-list .known {
+  white-space: nowrap;
+}
+
+.table-responsive-list .team-name {
+  font-size: 1.3em;
+}
+
+@media (min-width: 720px) {
+  .table-responsive-list .team-name {
+    font-size: 1em;
+  }
+  .table-responsive-list td:before {
+    display: none;
+  }
+  .table-responsive-list th, .table-responsive-list td {
+    display: table-cell;
+  }
+  .table-responsive-list > tbody > tr > td {
+    border-top: 1px solid #ddd;
+    padding: 8px;
+  }
 }
