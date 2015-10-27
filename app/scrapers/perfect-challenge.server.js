@@ -211,7 +211,7 @@ function names(playerArr) {
 function namesFb(fbPlayerArr) {
 	var s = '';
 	for(var i = 0; i < fbPlayerArr.length; i++) {
-		s += fbPlayerArr[i].firstName + ' '+fbPlayerArr[i].lastName[0]+' ('+fbPlayerArr[i].ptsJustScored.toFixed(1)+')';
+		s += fbPlayerArr[i].firstName[0] + ' '+fbPlayerArr[i].lastName+' ('+fbPlayerArr[i].ptsJustScored.toFixed(1)+')';
 		if (i === fbPlayerArr.length-2) {
 			s+= ' and ';
 		} else if (i < fbPlayerArr.length-2) {
@@ -342,8 +342,8 @@ function calculateDifference(job) {
 		var fbPlayerScores = calcFbPlayerScores(playerPageNew, playerPageOld);
 		_.each(playerPageNew.players, function(playerNew) {
 			var text = calcPlayerDifference(playerNew, playerPageNew, playerPageOld, fbPlayerScores);
-			l(text);
 			if (text && PLAYER_PHONES[playerNew.name]) {
+				text = text + ' http://goo.gl/u7cpZh';
 				// need to throttle sending. This is a bit hacky
 				setTimeout(function() {
 					sms.sendQueued(playerNew.name, PLAYER_PHONES[playerNew.name], text);

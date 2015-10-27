@@ -60,6 +60,7 @@
               <td data-title="Rank">{{player.unverifiedRank}}</td>
               <td data-title="Team Name">
                 <a target="_blank" href="{{player.url}}" class="team-name">{{player.name}}</a>
+                <span ng-show="player.owner">({{player.owner}})</span>
               </td>
               <td data-title="Points"><strong>{{player.unverifiedPoints | number : 1}}</strong></td>
               <td data-title="Unknown Positions" ng-show="stat === 'weekly'">

@@ -38,7 +38,8 @@ function scarBonusOverall() {
 				unverifiedPoints : bonus,
 				url : row['nfl.comlink'],
 				name : row.team,
-				division : row.division
+				division : row.division,
+				owner : row.owner
 			};
 		});
 		var players = sortAndRank(playerBonuses);
@@ -64,7 +65,8 @@ function scarBonusWeekly(week) {
 				unverifiedPoints : bonus,
 				url : row['nfl.comlink'],
 				name : row.team,
-				division : row.division
+				division : row.division,
+				owner : row.owner
 			};
 		});
 		var players = sortAndRank(playerBonuses);
@@ -85,6 +87,7 @@ function applyDivisions(playerPageOverall, playerPageBonus, stat, bonus) {
 			playerOverall.unverifiedPoints += playerBonus.unverifiedPoints;
 		}
 		playerOverall.division = playerBonus.division;
+		playerOverall.owner = playerBonus.owner;
 	});
 	var players = sortAndRank(playerPageOverall.players);
 	return {
@@ -150,11 +153,7 @@ exports.perfectchallenge = function(req) {
 	var bonus = req.param('bonus') === 'true';
 	var week = req.param('week');
 	if (stat === 'overall') {
-		if (bonus) {
-			return overallWithDivisions(stat, bonus);
-		} else {
-			return PerfectChallengeScraper.fetchPlayerPageOverall();
-		}
+		return overallWithDivisions(stat, bonus);
 	} else if (stat === 'divisions') {
 		return divisions(overallWithDivisions(stat, bonus), stat);
 	} else if (stat === 'divisionsByWeek') {
@@ -164,11 +163,7 @@ exports.perfectchallenge = function(req) {
 	} else if (stat === 'bonusByWeek') {
 		return scarBonusWeekly(week);
 	} else if (stat === 'weekly') {
-		if (bonus) {
-			return weeklyWithDivisions(stat, bonus, week);
-		} else {
-			return PerfectChallengeScraper.fetchPlayerPage(week);
-		}
+		return weeklyWithDivisions(stat, bonus, week);
 	}
 };
 

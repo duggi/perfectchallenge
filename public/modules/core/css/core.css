@@ -126,12 +126,12 @@ hr {
 }
 
 .unique {
-  color: #797;
+  color: green;
   font-weight: bold;
 }
 
 .bandwagon {
-  color: #976;
+  color: firebrick;
   font-weight: bold;
 }
 
