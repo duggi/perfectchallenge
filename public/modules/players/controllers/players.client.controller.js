@@ -23,6 +23,7 @@ angular.module('players').controller('PlayersController', ['$scope', '$http', '$
 					$scope.week = response.data.week;
 				}
 				$scope.bonus = response.data.bonus || false;
+				ga('send', 'event', $scope.stat, $scope.week, $scope.bonus);
 				$scope.loading = false;
 			});
 		}
