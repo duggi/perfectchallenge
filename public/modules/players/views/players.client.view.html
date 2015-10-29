@@ -61,8 +61,8 @@
               <td data-title="Rank">{{player.unverifiedRank}}</td>
               <td data-title="Team Name">
                 <a target="_blank" href="{{player.url}}" class="team-name">{{player.name}}</a>
-                <span ng-show="player.owner">({{player.owner}})</span>
-                <span ng-show="player.division"></span>
+                <span ng-show="player.owner" class="pill-label player-owner-label">{{player.owner}}</span>
+                <!-- span ng-show="player.division" class="pill-label player-owner-label">{{player.division}}</span -->
               </td>
               <td ng-hide="stat === 'divisions' || stat === 'divisionsByWeek'" data-title="Division">{{player.division}}</td>
               <td data-title="Points"><strong>{{player.unverifiedPoints | number : 1}}</strong></td>
