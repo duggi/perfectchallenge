@@ -234,7 +234,8 @@ function calcPlayerDifference(playerNew, playerPageNew, playerPageOld, fbPlayerS
 	var playersPassed = removeFrom(playersBehindNew, playersBehindOld);
 	var playersPassedMe = removeFrom(playersAheadNew, playersAheadOld);
 	if (playerNew.unverifiedRank !== playerOld.unverifiedRank || playersPassed.length || playersPassedMe.length) {
-		var text = 'You ('+playerNew.name+') are currently ranked #'+playerNew.unverifiedRank+' this week.';
+		//var text = 'You ('+playerNew.name+') are currently ranked #'+playerNew.unverifiedRank+' this week.';
+		var text = 'You are now #' + playerNew.unverifiedRank + ' this week. (' + playerNew.name + ')';
 		if (playersPassed.length) {
 			// players on my roster the scored.
 			var scoringFbPlayers = _.filter(fbPlayerScores, function(fbPlayer) {
