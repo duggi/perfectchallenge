@@ -288,6 +288,7 @@ function calcPlayerDifference(playerNew, playerPageNew, playerPageOld, fbPlayerS
 var PLAYER_PHONES = {'80\'s Spaceman' : '+15109674275', //jesse
 	'Cleveland Steamers' : '+14156139871', //dennis
 	'Deez Nuts for Prez' : '+16505761388', //doug
+	'Living the Dream' : '+16504303035', //eric
 //	'Terrible Towelies' : '+14157229175', //rusty
 	'Better than Quidditch' : '+14159718315', //ian
 	'powderprincess57\'s picks' : '+16502192701', //amy

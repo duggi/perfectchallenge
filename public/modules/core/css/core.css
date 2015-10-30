@@ -169,7 +169,7 @@ hr {
   font-size: 1.3em;
 }
 
-@media (min-width: 720px) {
+@media (min-width: 445px) { /* nexus 5 */
   .logo {
     background-size: 404px 148px;
     width: 404px;
