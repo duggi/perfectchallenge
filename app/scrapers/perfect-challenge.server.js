@@ -74,6 +74,8 @@ function getRoster(path) {
 			if ($('.first-name', slot).text() || $('.last-name', slot).text()) {
 				fbPlayer.firstName = $('.first-name', slot).text();
 				fbPlayer.lastName = $('.last-name', slot).text();
+				var statusAndScore = $('.sg', slot).text();
+				fbPlayer.status = statusAndScore.split(',')[0];
 				fbPlayer.pct = parseFloat($('.pct em', slot).text());
 				fbPlayer.pts = parseFloat($('.pts em', slot).text());
 				var src = $('.pill img', slot).attr('src');

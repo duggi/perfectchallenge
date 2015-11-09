@@ -80,7 +80,9 @@
                     <small class="pill-label position-label">{{fbPlayer.position}}:</small>
                     {{fbPlayer.firstName | limitTo : 1}} {{fbPlayer.lastName}}
                     <span ng-show="fbPlayer.team"> - {{fbPlayer.team}}</span>
-                    ({{fbPlayer.pts}})
+                    ({{fbPlayer.pts}}
+                    <span ng-show="fbPlayer.status === 'Loss' || fbPlayer.status === 'Win'">F)</span>
+                    <span ng-hide="fbPlayer.status === 'Loss' || fbPlayer.status === 'Win'">{{fbPlayer.status}})</span>
                   </span>
                 </span>
               </td>
