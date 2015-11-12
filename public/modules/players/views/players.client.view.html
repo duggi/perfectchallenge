@@ -6,8 +6,11 @@
     <div class="card player-table-card">
       <!-- HEADER -->
       <div class="header">
-        <h2 class="title">
+        <h2 ng-show="week" class="title">
           Week {{week}} Rankings
+        </h2>
+        <h2 ng-hide="week" class="title">
+          Rankings
         </h2>
         <hr>
         <div class="controls">

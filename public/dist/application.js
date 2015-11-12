@@ -243,7 +243,9 @@ angular.module('players').controller('PlayersController', [
       'divisions',
       'divisionsByWeek',
       'bonus',
-      'bonusByWeek'
+      'bonusByWeek',
+      'gender',
+      'genderByWeek'
     ];
     $scope.allWeeks = [
       1,

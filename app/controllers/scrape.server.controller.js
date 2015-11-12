@@ -88,6 +88,9 @@ function applyDivisions(playerPageOverall, playerPageBonus, stat, bonus) {
 		}
 		playerOverall.division = playerBonus.division;
 		playerOverall.owner = playerBonus.owner;
+		if (playerBonus.gender) {
+			playerOverall.gender = playerBonus.gender;
+		}
 	});
 	var players = sortAndRank(playerPageOverall.players);
 	return {
@@ -148,12 +151,64 @@ function divisions(promise, stat) {
 // stat - overall, weekly, division, division by week, bonus, bonus by week
 // checkbox (include bonus)
 
+var genderData = {
+	'http://perfectchallenge.fantasy.nfl.com/entry?entryId=2220785':'f',
+	'http://perfectchallenge.fantasy.nfl.com/entry?entryId=2238240':'f',
+	'http://perfectchallenge.fantasy.nfl.com/entry?entryId=2267549':'f',
+	'http://perfectchallenge.fantasy.nfl.com/entry?entryId=2212251':'f',
+	'http://perfectchallenge.fantasy.nfl.com/entry?entryId=2235690':'f'
+};
+
+function genderMap(promise, stat) {
+	return promise.then(function(playerPage) {
+		var players = playerPage.players;
+		var genders = [];
+		var male = {
+			unverifiedPoints: 0,
+			name: 'Dudes',
+			count: 0,
+			url : 'http://mentalfloss.com/sites/default/legacy/blogs/wp-content/uploads/2012/01/the-dude.jpg'
+		};
+		var female = {
+			unverifiedPoints: 0,
+			name: 'Chicks',
+			count: 0,
+			url : 'http://www.digitalclaritygroup.com/wordpress/wp-content/uploads/2013/04/chicks.jpg'
+		};
+		genders.push(male);
+		genders.push(female);
+		_.each(players, function(player) {
+			var g = male;
+			console.log(player.url);
+			if (genderData[player.url]) {
+				g = female;
+			}
+			g.unverifiedPoints = (g.unverifiedPoints*g.count+player.unverifiedPoints)/(g.count+1);
+			g.count++;
+		});
+		genders = sortAndRank(genders);
+		var gendersPage = {
+			players: genders,
+			stat : stat,
+			bonus: playerPage.bonus
+		};
+		if (playerPage.week) {
+			gendersPage.week = playerPage.week;
+		}
+		return gendersPage;
+	});
+}
+
 exports.perfectchallenge = function(req) {
 	var stat = req.param('stat') || 'weekly';
 	var bonus = req.param('bonus') === 'true';
 	var week = req.param('week');
 	if (stat === 'overall') {
 		return overallWithDivisions(stat, bonus);
+	} else if (stat === 'gender') {
+		return genderMap(overallWithDivisions(stat, bonus), stat);
+	} else if (stat === 'genderByWeek') {
+		return genderMap(weeklyWithDivisions(stat, bonus, week), stat);
 	} else if (stat === 'divisions') {
 		return divisions(overallWithDivisions(stat, bonus), stat);
 	} else if (stat === 'divisionsByWeek') {
