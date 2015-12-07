@@ -148,6 +148,76 @@ function divisions(promise, stat) {
 		return playerPageDivisions;
 	});
 }
+
+function bestFromTwoSpots(best, roster1, roster2, index) {
+	var fbPlayers = [roster1[index], roster1[index+1], roster2[index], roster2[index+1]];
+	fbPlayers = _.uniq(fbPlayers, function(fbPlayer) {
+		return fbPlayer.firstName+' '+fbPlayer.lastName;
+	});
+	fbPlayers = _.sortBy(fbPlayers, function(fbPlayer) {
+		return -1 * fbPlayer.pts;
+	});
+	best[index] = fbPlayers[0];
+	if (fbPlayers.length>1) {
+		best[index+1] = fbPlayers[1];
+	} else {
+		best[index+1] = {
+			known: false,
+			position : fbPlayers[0].position
+		};
+	}
+}
+
+function bestCombinedRoster(roster1, roster2) {
+	var best = _.map(roster1, function(fbPlayer1, index) {
+		var fbPlayer2 = roster2[index];
+		if (!fbPlayer2.known || (fbPlayer1.known && fbPlayer1.pts >= fbPlayer2.pts)) {
+			return fbPlayer1;
+		} else {
+			return fbPlayer2;
+		}
+	});
+	bestFromTwoSpots(best, roster1, roster2, 1);
+	bestFromTwoSpots(best, roster1, roster2, 3);
+	return best;
+}
+
+function divisionsBestLineup(promise, stat) {
+	return promise.then(function(playerPage) {
+		var players = playerPage.players;
+		var divisions = [];
+		_.each(players, function(player) {
+			var division = _.find(divisions, function(division) {
+				return division.name === player.division;
+			});
+			if (!division) {
+				division = {
+					name : player.division,
+					unverifiedPoints : player.unverifiedPoints,
+					roster : player.roster
+				};
+				divisions.push(division);
+			} else {
+				division.roster = bestCombinedRoster(player.roster, division.roster);
+				var unknowns = _.filter(division.roster, {known:false});
+				division.unknownCount = unknowns.length;
+				division.unknownPositions = _.map(unknowns, 'position');
+				division.unverifiedPoints = _.sum(division.roster, 'pts');
+			}
+		});
+		divisions = sortAndRank(divisions);
+		var playerPageDivisions = {
+			players: divisions,
+			stat : stat,
+			bonus : false
+		};
+		if (playerPage.week) {
+			playerPageDivisions.week = playerPage.week;
+		}
+		return playerPageDivisions;
+	});
+}
+
 // stat - overall, weekly, division, division by week, bonus, bonus by week
 // checkbox (include bonus)
 
@@ -211,6 +281,8 @@ exports.perfectchallenge = function(req) {
 		return genderMap(weeklyWithDivisions(stat, bonus, week), stat);
 	} else if (stat === 'divisions') {
 		return divisions(overallWithDivisions(stat, bonus), stat);
+	} else if (stat === 'divisionsBestLineupByWeek') {
+		return divisionsBestLineup(weeklyWithDivisions(stat, bonus, week), stat);
 	} else if (stat === 'divisionsByWeek') {
 		return divisions(weeklyWithDivisions(stat, bonus, week), stat);
 	} else if (stat === 'bonus') {

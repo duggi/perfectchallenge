@@ -2,7 +2,7 @@
 
 angular.module('players').controller('PlayersController', ['$scope', '$http', '$state', '$stateParams',
 	function($scope, $http, $state, $stateParams) {
-		$scope.allStats = ['overall', 'weekly', 'divisions', 'divisionsByWeek', 'bonus', 'bonusByWeek', 'gender', 'genderByWeek'];
+		$scope.allStats = ['overall', 'weekly', 'divisions', 'divisionsByWeek', 'divisionsBestLineupByWeek', 'bonus', 'bonusByWeek', 'gender', 'genderByWeek'];
 		$scope.allWeeks = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17];
 		function fetchStats() {
 			$scope.loading = true;
@@ -19,6 +19,7 @@ angular.module('players').controller('PlayersController', ['$scope', '$http', '$
 			$http.get(url).then(function(response) {
 				$scope.players = response.data.players;
 				$scope.stat = response.data.stat;
+				$scope.showPositions = ($scope.stat === 'weekly' || $scope.stat === 'divisionsBestLineupByWeek');
 				if (response.data.week) {
 					$scope.week = response.data.week;
 				}
