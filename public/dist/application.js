@@ -242,6 +242,7 @@ angular.module('players').controller('PlayersController', [
       'weekly',
       'divisions',
       'divisionsByWeek',
+      'divisionsBestLineupByWeek',
       'bonus',
       'bonusByWeek',
       'gender',
@@ -281,6 +282,7 @@ angular.module('players').controller('PlayersController', [
       $http.get(url).then(function (response) {
         $scope.players = response.data.players;
         $scope.stat = response.data.stat;
+        $scope.showPositions = $scope.stat === 'weekly' || $scope.stat === 'divisionsBestLineupByWeek';
         if (response.data.week) {
           $scope.week = response.data.week;
         }
