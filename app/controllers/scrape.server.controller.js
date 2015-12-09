@@ -105,6 +105,17 @@ function applyDivisions(playerPageOverall, playerPageBonus, stat, bonus) {
 	return playerPage;
 }
 
+function addPeonMaster(players) {
+	_.each(players, function(player) {
+		if (player.unverifiedRank <= 6) {
+			player.master = true;
+		} else if (player.unverifiedRank >= 15) {
+			player.peon = true;
+		}
+	});
+	return players;
+}
+
 function overallWithDivisionsWeekEnding(stat, bonus, week, weekEnding, playersPageOverall) {
 	l('weeks', week, ' ', weekEnding);
 	return weeklyWithDivisions(stat, bonus, week).then(function (weekPlayerPage) {
@@ -124,7 +135,7 @@ function overallWithDivisionsWeekEnding(stat, bonus, week, weekEnding, playersPa
 			});
 		}
 		if (week === weekEnding) {
-			playersPageOverall.players = sortAndRank(playersPageOverall.players);
+			playersPageOverall.players = addPeonMaster(sortAndRank(playersPageOverall.players));
 			return playersPageOverall;
 		} else {
 			return overallWithDivisionsWeekEnding(stat, bonus, week+1, weekEnding, playersPageOverall);
@@ -135,7 +146,9 @@ function overallWithDivisionsWeekEnding(stat, bonus, week, weekEnding, playersPa
 function overallWithDivisions(stat, bonus) {
 	return PerfectChallengeScraper.fetchPlayerPageOverall().then(function(playerPageOverall) {
 		return scarBonusOverall().then(function(playerPageBonus) {
-			return applyDivisions(playerPageOverall, playerPageBonus, stat, bonus);
+			var playerPage = applyDivisions(playerPageOverall, playerPageBonus, stat, bonus);
+			playerPage.players = addPeonMaster(sortAndRank(playerPage.players));
+			return playerPage;
 		});
 	});
 }

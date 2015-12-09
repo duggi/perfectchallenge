@@ -139,6 +139,15 @@ hr {
   font-weight: bold;
 }
 
+.peon {
+  color: red;
+  font-weight: bold;
+}
+.master {
+  color: orange;
+  font-weight: bold;
+}
+
 
 /* -- RESPONSIVE TABLE LIST */
 

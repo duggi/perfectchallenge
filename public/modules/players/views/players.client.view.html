@@ -60,12 +60,14 @@
             </tr>
           </thead>
           <tbody>
-            <tr ng-repeat="player in players">
+            <tr ng-repeat="player in players" >
               <td data-title="Rank">{{player.unverifiedRank}}</td>
               <td data-title="Team Name">
                 <a target="_blank" href="{{player.url}}" class="team-name">{{player.name}}</a>
                 <span ng-show="player.owner" class="pill-label player-owner-label">{{player.owner}}</span>
                 <span ng-show="player.division" class="pill-label player-owner-label">{{player.division}}</span>
+                <span ng-show="player.peon" class="pill-label player-owner-label peon">peon</span>
+                <span ng-show="player.master" class="pill-label player-owner-label master">master</span>
               </td>
               <!-- td ng-hide="stat === 'divisions' || stat === 'divisionsByWeek'" data-title="Division">{{player.division}}</td -->
               <td data-title="Points"><strong>{{player.unverifiedPoints | number : 1}}</strong></td>
