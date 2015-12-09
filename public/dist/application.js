@@ -239,6 +239,7 @@ angular.module('players').controller('PlayersController', [
   function ($scope, $http, $state, $stateParams) {
     $scope.allStats = [
       'overall',
+      'overallWeekEnding',
       'weekly',
       'divisions',
       'divisionsByWeek',
