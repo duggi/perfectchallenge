@@ -3,6 +3,7 @@
 var qM = require('../utils/queue-manager');
 var PerfectChallengeScraper = require('../scrapers/perfect-challenge.server.js');
 var GoogleSpreadsheet = require('google-spreadsheet');
+var l = require('../utils/logging');
 var q = require('q');
 var _ = require('lodash');
 
@@ -93,11 +94,42 @@ function applyDivisions(playerPageOverall, playerPageBonus, stat, bonus) {
 		}
 	});
 	var players = sortAndRank(playerPageOverall.players);
-	return {
+	var playerPage = {
 		players : players,
 		stat : stat,
 		bonus: bonus
 	};
+	if (playerPageOverall.week) {
+		playerPage.week = playerPageOverall.week;
+	}
+	return playerPage;
+}
+
+function overallWithDivisionsWeekEnding(stat, bonus, week, weekEnding, playersPageOverall) {
+	l('weeks', week, ' ', weekEnding);
+	return weeklyWithDivisions(stat, bonus, week).then(function (weekPlayerPage) {
+		if (week===1) {
+			playersPageOverall = {
+				players : weekPlayerPage.players,
+				stat : stat,
+				week: weekEnding,
+				bonus: bonus
+			};
+		} else {
+			_.each(weekPlayerPage.players, function(player) {
+				var playerOverall = _.find(playersPageOverall.players, function(player2) {
+					return player.name === player2.name;
+				});
+				playerOverall.unverifiedPoints += player.unverifiedPoints;
+			});
+		}
+		if (week === weekEnding) {
+			playersPageOverall.players = sortAndRank(playersPageOverall.players);
+			return playersPageOverall;
+		} else {
+			return overallWithDivisionsWeekEnding(stat, bonus, week+1, weekEnding, playersPageOverall);
+		}
+	});
 }
 
 function overallWithDivisions(stat, bonus) {
@@ -111,9 +143,7 @@ function overallWithDivisions(stat, bonus) {
 function weeklyWithDivisions(stat, bonus, week) {
 	return PerfectChallengeScraper.fetchPlayerPage(week).then(function(playerPageWeek) {
 		return scarBonusWeekly(playerPageWeek.week).then(function(playerPageBonus) {
-			var playerPage = applyDivisions(playerPageWeek, playerPageBonus, stat, bonus);
-			playerPage.week = playerPageWeek.week;
-			return playerPage;
+			return applyDivisions(playerPageWeek, playerPageBonus, stat, bonus);
 		});
 	});
 }
@@ -275,6 +305,9 @@ exports.perfectchallenge = function(req) {
 	var week = req.param('week');
 	if (stat === 'overall') {
 		return overallWithDivisions(stat, bonus);
+	} else if (stat === 'overallWeekEnding') {
+		week = week || calcDefaultWeek();
+		return overallWithDivisionsWeekEnding(stat, bonus, 1, parseInt(week));
 	} else if (stat === 'gender') {
 		return genderMap(overallWithDivisions(stat, bonus), stat);
 	} else if (stat === 'genderByWeek') {
