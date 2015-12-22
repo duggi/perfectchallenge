@@ -108,9 +108,9 @@ function applyDivisions(playerPageOverall, playerPageBonus, stat, bonus) {
 function addPeonMaster(playersPage) {
 	if (playersPage.bonus) {
 		_.each(playersPage.players, function(player) {
-			if (player.unverifiedRank <= 6) {
+			if (player.unverifiedRank <= 5) {
 				player.master = true;
-			} else if (player.unverifiedRank >= 15) {
+			} else if (player.unverifiedRank >= 16) {
 				player.peon = true;
 			}
 		});
