@@ -86,5 +86,26 @@
 		};
 	};
 
+	exports.addStandardRoutes = function(app, typeNameSingular, typeNamePlural, typeControllers, requiresLogin) {
+		var typeId = typeNameSingular+'Id';
+		if (!requiresLogin) {
+			requiresLogin = function(req, res, next) {
+				next();
+			};
+		}
+		app.route('/'+typeNamePlural)
+			.get(exports.jsonp(typeControllers.list))
+			.post(requiresLogin, exports.jsonp(typeControllers.create));
+
+		app.route('/'+typeNamePlural+'/:'+typeId)
+			.get(exports.jsonp(typeControllers.read))
+			.put(requiresLogin, exports.jsonp(typeControllers.update))
+			.delete(requiresLogin, exports.jsonp(typeControllers.delete));
+
+		// Finish by binding the middleware
+		app.param(typeId, exports.param(typeControllers[typeNameSingular+'ByID'], typeNameSingular));
+	};
+
+
 })();
 

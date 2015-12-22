@@ -1,0 +1,17 @@
+<section ng-controller="ImagesController">
+    <form class="upload_form">
+        <input type="text" name="foo" value="bar" />
+        <input type="file" name="file" class="upload_field">
+    </form>
+    <div class="thumbnails"></div>
+    <div class="progress_bar" style="background-color:red;width:20px;height:20px"></div>
+
+    <div class="list-group">
+        <div ng-repeat="image in images">
+            {{image.caption}}
+        </div>
+    </div>
+    <div class="alert alert-warning text-center" data-ng-hide="!images.$resolved || images.length">
+    	No Images yet, why don't you <a href="/#!/images/create">create one</a>?
+    </div>
+</section>

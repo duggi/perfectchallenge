@@ -14,7 +14,12 @@
     "angular-bootstrap": "~0.11.0",
     "angular-ui-utils": "~0.1.1",
     "angular-ui-router": "~0.2.10",
-    "lodash": "~3.10.1"
+    "lodash": "~3.10.1",
+    "cloudinary-core": "~2.0.3",
+    "cloudinary-jquery": "~2.0.3",
+    "cloudinary-jquery-file-upload": "~2.0.3",
+    "jquery": "jQuery#~2.1.4",
+    "blueimp-file-upload": "~9.11.2"
   },
   "resolutions": {
     "angular": "1.4.5"

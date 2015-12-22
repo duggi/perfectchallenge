@@ -117,6 +117,14 @@ function addPeonMaster(playersPage) {
 	}
 }
 
+function weeklyWithDivisions(stat, bonus, week) {
+	return PerfectChallengeScraper.fetchPlayerPage(week).then(function(playerPageWeek) {
+		return scarBonusWeekly(playerPageWeek.week).then(function(playerPageBonus) {
+			return applyDivisions(playerPageWeek, playerPageBonus, stat, bonus);
+		});
+	});
+}
+
 function overallWithDivisionsWeekEnding(stat, bonus, week, weekEnding, playersPageOverall) {
 	l('weeks', week, ' ', weekEnding);
 	return weeklyWithDivisions(stat, bonus, week).then(function (weekPlayerPage) {
@@ -151,14 +159,6 @@ function overallWithDivisions(stat, bonus) {
 			var playerPage = applyDivisions(playerPageOverall, playerPageBonus, stat, bonus);
 			addPeonMaster(playerPage);
 			return playerPage;
-		});
-	});
-}
-
-function weeklyWithDivisions(stat, bonus, week) {
-	return PerfectChallengeScraper.fetchPlayerPage(week).then(function(playerPageWeek) {
-		return scarBonusWeekly(playerPageWeek.week).then(function(playerPageBonus) {
-			return applyDivisions(playerPageWeek, playerPageBonus, stat, bonus);
 		});
 	});
 }
