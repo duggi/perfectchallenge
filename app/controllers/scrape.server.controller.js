@@ -40,7 +40,8 @@ function scarBonusOverall() {
 				url : row['nfl.comlink'],
 				name : row.team,
 				division : row.division,
-				owner : row.owner
+				owner : row.owner,
+				customDivision : row.customdivision
 			};
 		});
 		var players = sortAndRank(playerBonuses);
@@ -67,7 +68,8 @@ function scarBonusWeekly(week) {
 				url : row['nfl.comlink'],
 				name : row.team,
 				division : row.division,
-				owner : row.owner
+				owner : row.owner,
+				customDivision : row.customdivision
 			};
 		});
 		var players = sortAndRank(playerBonuses);
@@ -89,6 +91,7 @@ function applyDivisions(playerPageOverall, playerPageBonus, stat, bonus) {
 		}
 		playerOverall.division = playerBonus.division;
 		playerOverall.owner = playerBonus.owner;
+		playerOverall.customDivision = playerBonus.customDivision;
 		if (playerBonus.gender) {
 			playerOverall.gender = playerBonus.gender;
 		}
@@ -227,22 +230,23 @@ function bestCombinedRoster(roster1, roster2) {
 	return best;
 }
 
-function divisionsBestLineup(promise, stat) {
+function divisionsBestLineup(promise, stat, custom) {
 	return promise.then(function(playerPage) {
 		var players = playerPage.players;
 		var divisions = [];
 		_.each(players, function(player) {
+			var divisionName = (custom?player.customDivision:player.division);
 			var division = _.find(divisions, function(division) {
-				return division.name === player.division;
+				return division.name === divisionName;
 			});
-			if (!division) {
+			if (!division && divisionName) {
 				division = {
-					name : player.division,
+					name :  divisionName,
 					unverifiedPoints : player.unverifiedPoints,
 					roster : player.roster
 				};
 				divisions.push(division);
-			} else {
+			} else if (divisionName) {
 				division.roster = bestCombinedRoster(player.roster, division.roster);
 				var unknowns = _.filter(division.roster, {known:false});
 				division.unknownCount = unknowns.length;
@@ -330,7 +334,9 @@ exports.perfectchallenge = function(req) {
 	} else if (stat === 'divisions') {
 		return divisions(overallWithDivisions(stat, bonus), stat);
 	} else if (stat === 'divisionsBestLineupByWeek') {
-		return divisionsBestLineup(weeklyWithDivisions(stat, bonus, week), stat);
+		return divisionsBestLineup(weeklyWithDivisions(stat, bonus, week), stat, false);
+	} else if (stat === 'customBestLineupByWeek') {
+		return divisionsBestLineup(weeklyWithDivisions(stat, bonus, week), stat, true);
 	} else if (stat === 'divisionsByWeek') {
 		return divisions(weeklyWithDivisions(stat, bonus, week), stat);
 	} else if (stat === 'bonus') {

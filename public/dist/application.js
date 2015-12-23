@@ -46,6 +46,8 @@ angular.element(document).ready(function () {
 // Use Applicaion configuration module to register a new module
 ApplicationConfiguration.registerModule('core');'use strict';
 // Use applicaion configuration module to register a new module
+ApplicationConfiguration.registerModule('images');'use strict';
+// Use applicaion configuration module to register a new module
 ApplicationConfiguration.registerModule('players');'use strict';
 // Use Applicaion configuration module to register a new module
 ApplicationConfiguration.registerModule('users');'use strict';
@@ -221,6 +223,59 @@ angular.module('core').service('Menus', [function () {
     this.addMenu('topbar');
   }]);'use strict';
 //Setting up route
+angular.module('images').config([
+  '$stateProvider',
+  function ($stateProvider) {
+    // Images state routing
+    $stateProvider.state('listImages', {
+      url: '/images',
+      templateUrl: 'modules/images/views/list-images.client.view.html'
+    }).state('createImage', {
+      url: '/images/create',
+      templateUrl: 'modules/images/views/create-image.client.view.html'
+    }).state('viewImage', {
+      url: '/images/:imageId',
+      templateUrl: 'modules/images/views/view-image.client.view.html'
+    }).state('editImage', {
+      url: '/images/:imageId/edit',
+      templateUrl: 'modules/images/views/edit-image.client.view.html'
+    });
+  }
+]);'use strict';
+// Images controller
+angular.module('images').controller('ImagesController', [
+  '$scope',
+  '$stateParams',
+  '$location',
+  'Images',
+  function ($scope, $stateParams, $location, Images) {
+    $scope.images = Images.query();
+    $('.upload_field').unsigned_cloudinary_upload('spp6yanh', { cloud_name: 'dnbcedmm8' }).bind('cloudinarydone', function (e, data) {
+      console.log(data.result);
+      $('.progress_bar').css('width', '0%');
+      $('.thumbnails').append($.cloudinary.image(data.result.public_id, {
+        cloud_name: 'dnbcedmm8',
+        format: 'jpg',
+        width: 150,
+        height: 100,
+        crop: 'thumb',
+        gravity: 'face',
+        effect: 'saturation:50'
+      }));
+    }).bind('cloudinaryprogress', function (e, data) {
+      $('.upload_field').css('display', 'none');
+      $('.progress_bar').css('width', Math.round(data.loaded * 100 / data.total) + '%');
+    });
+  }
+]);'use strict';
+//Images service used to communicate Images REST endpoints
+angular.module('images').factory('Images', [
+  '$resource',
+  function ($resource) {
+    return $resource('images/:imageId', { imageId: '@_id' }, { update: { method: 'PUT' } });
+  }
+]);'use strict';
+//Setting up route
 angular.module('players').config([
   '$stateProvider',
   function ($stateProvider) {
@@ -244,6 +299,7 @@ angular.module('players').controller('PlayersController', [
       'divisions',
       'divisionsByWeek',
       'divisionsBestLineupByWeek',
+      'customBestLineupByWeek',
       'bonus',
       'bonusByWeek',
       'gender',
@@ -283,7 +339,7 @@ angular.module('players').controller('PlayersController', [
       $http.get(url).then(function (response) {
         $scope.players = response.data.players;
         $scope.stat = response.data.stat;
-        $scope.showPositions = $scope.stat === 'weekly' || $scope.stat === 'divisionsBestLineupByWeek';
+        $scope.showPositions = $scope.stat === 'weekly' || $scope.stat === 'divisionsBestLineupByWeek' || $scope.stat === 'customBestLineupByWeek';
         if (response.data.week) {
           $scope.week = response.data.week;
         }
