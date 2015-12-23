@@ -243,11 +243,13 @@ function divisionsBestLineup(promise, stat, custom) {
 				division = {
 					name :  divisionName,
 					unverifiedPoints : player.unverifiedPoints,
-					roster : player.roster
+					roster : player.roster,
+					divisionPlayers : [player]
 				};
 				divisions.push(division);
 			} else if (divisionName) {
 				division.roster = bestCombinedRoster(player.roster, division.roster);
+				division.divisionPlayers.push(player);
 				var unknowns = _.filter(division.roster, {known:false});
 				division.unknownCount = unknowns.length;
 				division.unknownPositions = _.map(unknowns, 'position');
@@ -255,6 +257,9 @@ function divisionsBestLineup(promise, stat, custom) {
 			}
 		});
 		divisions = sortAndRank(divisions);
+		_.each(divisions, function(division) {
+			division.divisionPlayers = sortAndRank(division.divisionPlayers);
+		});
 		var playerPageDivisions = {
 			players: divisions,
 			stat : stat,

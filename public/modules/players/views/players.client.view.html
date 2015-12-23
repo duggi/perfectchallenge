@@ -55,6 +55,7 @@
               <th>Points</th>
               <th ng-show="showPositions">Unknown Positions</th>
               <th ng-show="showPositions">Known Positions</th>
+              <th ng-show="showDivisionPlayers">Division Players</th>
             </tr>
           </thead>
           <tbody>
@@ -86,6 +87,13 @@
                     ({{fbPlayer.pts}}
                     <span ng-show="fbPlayer.status === 'Loss' || fbPlayer.status === 'Win'">F)</span>
                     <span ng-hide="fbPlayer.status === 'Loss' || fbPlayer.status === 'Win'">{{fbPlayer.status}})</span>
+                  </span>
+                </span>
+              </td>
+              <td data-title="Division Players" ng-show="showDivisionPlayers">
+                <span ng-repeat="dPlayer in player.divisionPlayers">
+                  <span class="fb-player-stat-line">
+                    {{dPlayer.unverifiedRank}}) {{dPlayer.name}} ({{dPlayer.unverifiedPoints | number : 1}})
                   </span>
                 </span>
               </td>

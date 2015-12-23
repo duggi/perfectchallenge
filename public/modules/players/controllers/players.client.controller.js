@@ -21,6 +21,7 @@ angular.module('players').controller('PlayersController', ['$scope', '$http', '$
 				$scope.players = response.data.players;
 				$scope.stat = response.data.stat;
 				$scope.showPositions = ($scope.stat === 'weekly' || $scope.stat === 'divisionsBestLineupByWeek' || $scope.stat === 'customBestLineupByWeek');
+				$scope.showDivisionPlayers = ($scope.stat === 'divisionsBestLineupByWeek' || $scope.stat === 'customBestLineupByWeek');
 				if (response.data.week) {
 					$scope.week = response.data.week;
 				}
