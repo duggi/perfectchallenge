@@ -1,13 +1,14 @@
 <section ng-controller="PlayersController">
   <span class="loader" ng-show="loading"></span>
   <div ng-hide="loading">
-
-
     <div class="card player-table-card">
       <!-- HEADER -->
       <div class="header">
-        <h2 class="title">
+        <h2 ng-show="week" class="title">
           Week {{week}} Rankings
+        </h2>
+        <h2 ng-hide="week" class="title">
+          Rankings
         </h2>
         <hr>
         <div class="controls">
@@ -52,21 +53,24 @@
               <th>Team Name</th>
               <!-- th ng-hide="stat === 'divisions' || stat === 'divisionsByWeek'">Division</th -->
               <th>Points</th>
-              <th ng-show="stat === 'weekly'">Unknown Positions</th>
-              <th ng-show="stat === 'weekly'">Known Positions</th>
+              <th ng-show="showPositions">Unknown Positions</th>
+              <th ng-show="showPositions">Known Positions</th>
+              <th ng-show="showDivisionPlayers">Division Players</th>
             </tr>
           </thead>
           <tbody>
-            <tr ng-repeat="player in players">
+            <tr ng-repeat="player in players" >
               <td data-title="Rank">{{player.unverifiedRank}}</td>
               <td data-title="Team Name">
                 <a target="_blank" href="{{player.url}}" class="team-name">{{player.name}}</a>
                 <span ng-show="player.owner" class="pill-label player-owner-label">{{player.owner}}</span>
                 <span ng-show="player.division" class="pill-label player-owner-label">{{player.division}}</span>
+                <span ng-show="player.peon" class="pill-label player-owner-label peon">peon</span>
+                <span ng-show="player.master" class="pill-label player-owner-label master">master</span>
               </td>
               <!-- td ng-hide="stat === 'divisions' || stat === 'divisionsByWeek'" data-title="Division">{{player.division}}</td -->
               <td data-title="Points"><strong>{{player.unverifiedPoints | number : 1}}</strong></td>
-              <td data-title="Unknown Positions" ng-show="stat === 'weekly'">
+              <td data-title="Unknown Positions" ng-show="showPositions">
                 <span class="unknown">
                   <span class="pill-label">{{player.unknownCount}}</span>
                   <span ng-repeat="pos in player.unknownPositions track by $index">
@@ -74,13 +78,22 @@
                   </span>
                 </span>
               </td>
-              <td data-title="Known Positions" ng-show="stat === 'weekly'">
+              <td data-title="Known Positions" ng-show="showPositions">
                 <span ng-repeat="fbPlayer in player.roster">
                   <span ng-show="fbPlayer.known" class="fb-player-stat-line {{fbPlayer.timesPicked===1?'unique':fbPlayer.timesPicked>=8?'bandwagon':''}}">
                     <small class="pill-label position-label">{{fbPlayer.position}}:</small>
                     {{fbPlayer.firstName | limitTo : 1}} {{fbPlayer.lastName}}
                     <span ng-show="fbPlayer.team"> - {{fbPlayer.team}}</span>
-                    ({{fbPlayer.pts}})
+                    ({{fbPlayer.pts}}
+                    <span ng-show="fbPlayer.status === 'Loss' || fbPlayer.status === 'Win'">F)</span>
+                    <span ng-hide="fbPlayer.status === 'Loss' || fbPlayer.status === 'Win'">{{fbPlayer.status}})</span>
+                  </span>
+                </span>
+              </td>
+              <td data-title="Division Players" ng-show="showDivisionPlayers">
+                <span ng-repeat="dPlayer in player.divisionPlayers">
+                  <span class="fb-player-stat-line">
+                    {{dPlayer.unverifiedRank}}) {{dPlayer.name}} ({{dPlayer.unverifiedPoints | number : 1}})
                   </span>
                 </span>
               </td>

@@ -10,6 +10,13 @@ module.exports = {
 			],
 			js: [
 				'public/lib/lodash/lodash.min.js',
+				'public/lib/jquery/dist/jquery.min.js',
+				'public/lib/jquery.ui/ui/widget.js',
+				'public/lib/blueimp-file-upload/js/jquery.iframe-transport.js',
+				'public/lib/blueimp-file-upload/js/jquery.fileupload.js',
+				'public/lib/cloudinary-core/cloudinary-core.js',
+				'public/lib/cloudinary-jquery/cloudinary-jquery.js',
+				'public/lib/cloudinary-jquery-file-upload/cloudinary-jquery-file-upload.js',
 				'public/lib/angular/angular.min.js',
 				'public/lib/angular-resource/angular-resource.js', 
 				'public/lib/angular-cookies/angular-cookies.js', 
