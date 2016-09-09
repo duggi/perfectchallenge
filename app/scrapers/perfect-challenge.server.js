@@ -90,7 +90,7 @@ function getRoster(path) {
 }
 
 exports.fetchPlayerPageOverall = function() {
-	return getPlayers('/group/41592?statType=season').then(function(playersPageOverall) {
+	return getPlayers('/group/53380?statType=season').then(function(playersPageOverall) {
 		return exports.fetchPlayerPage().then(function(playerPageThisWeek) {
 			_.each(playersPageOverall.players, function(playerOverall) {
 				var playerThisWeek = _.find(playerPageThisWeek.players, function(player) {
@@ -116,7 +116,7 @@ function uniqueFbPlayerName(fbPlayer) {
 
 exports.fetchPlayerPage = function(week) {
 	week = week || calcDefaultWeek();
-	return getPlayers('/group/41592?statType=week&statWeek='+week).then(function(playersPage) {
+	return getPlayers('/group/53380?statType=week&statWeek='+week).then(function(playersPage) {
 		var players = playersPage.players;
 		var promises = _.map(players, function(player) {
 			return getRoster(player.url+'&week='+week);
