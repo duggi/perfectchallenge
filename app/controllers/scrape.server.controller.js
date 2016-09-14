@@ -24,7 +24,7 @@ function calcDefaultWeek() {
 
 
 function scarBonusOverall() {
-	var scarSheet = new GoogleSpreadsheet('1mRT_lp_igtjXHscx_1tbAwdliQyHeSX7YJpUJcHmXuU');
+	var scarSheet = new GoogleSpreadsheet('1345PxfzAi1mz96b801M21KNvcdtcgye3uPl93lk2SWA');
 	var getRows = q.nbind(scarSheet.getRows, scarSheet);
 	return getRows( 1).then(function(rows) {
 		var playerBonuses = _.map(rows, function(row)  {
@@ -54,7 +54,7 @@ function scarBonusOverall() {
 
 function scarBonusWeekly(week) {
 	week = parseInt(week) || calcDefaultWeek();
-	var scarSheet = new GoogleSpreadsheet('1mRT_lp_igtjXHscx_1tbAwdliQyHeSX7YJpUJcHmXuU');
+	var scarSheet = new GoogleSpreadsheet('1345PxfzAi1mz96b801M21KNvcdtcgye3uPl93lk2SWA');
 	var getRows = q.nbind(scarSheet.getRows, scarSheet);
 	return getRows( 1).then(function(rows) {
 		var playerBonuses = _.map(rows, function(row)  {
