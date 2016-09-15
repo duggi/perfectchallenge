@@ -12,7 +12,7 @@ var random = require('../utils/random');
 var sms = require('../utils/sms');
 
 function calcDefaultWeek() {
-	var diff = (new Date().getTime() - new Date(2015, 8, 10).getTime())/(7*24*60*60*1000);
+	var diff = (new Date().getTime() - new Date(2016, 8, 8).getTime())/(7*24*60*60*1000);
 	return Math.min(17, Math.max(1, Math.floor(diff)+1));
 }
 

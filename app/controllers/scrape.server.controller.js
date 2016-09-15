@@ -18,7 +18,7 @@ function sortAndRank(players) {
 }
 
 function calcDefaultWeek() {
-	var diff = (new Date().getTime() - new Date(2015, 8, 10).getTime())/(7*24*60*60*1000);
+	var diff = (new Date().getTime() - new Date(2016, 8, 8).getTime())/(7*24*60*60*1000);
 	return Math.min(17, Math.max(1, Math.floor(diff)+1));
 }
 
@@ -26,7 +26,7 @@ function calcDefaultWeek() {
 function scarBonusOverall() {
 	var scarSheet = new GoogleSpreadsheet('1345PxfzAi1mz96b801M21KNvcdtcgye3uPl93lk2SWA');
 	var getRows = q.nbind(scarSheet.getRows, scarSheet);
-	return getRows( 1).then(function(rows) {
+	return getRows( 2).then(function(rows) {
 		var playerBonuses = _.map(rows, function(row)  {
 			var bonus = 0;
 			for(var i = 1; i <= 17; i++) {
@@ -56,7 +56,8 @@ function scarBonusWeekly(week) {
 	week = parseInt(week) || calcDefaultWeek();
 	var scarSheet = new GoogleSpreadsheet('1345PxfzAi1mz96b801M21KNvcdtcgye3uPl93lk2SWA');
 	var getRows = q.nbind(scarSheet.getRows, scarSheet);
-	return getRows( 1).then(function(rows) {
+	return getRows( 2).then(function(rows) {
+    console.log(rows);
 		var playerBonuses = _.map(rows, function(row)  {
 			var bonus = 0;
 			var weekBonus = parseInt(row['week'+week+'bonus']);
@@ -122,6 +123,7 @@ function addPeonMaster(playersPage) {
 
 function weeklyWithDivisions(stat, bonus, week) {
 	return PerfectChallengeScraper.fetchPlayerPage(week).then(function(playerPageWeek) {
+    console.log(playerPageWeek);
 		return scarBonusWeekly(playerPageWeek.week).then(function(playerPageBonus) {
 			return applyDivisions(playerPageWeek, playerPageBonus, stat, bonus);
 		});
