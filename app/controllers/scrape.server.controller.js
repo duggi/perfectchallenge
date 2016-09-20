@@ -41,7 +41,8 @@ function scarBonusOverall() {
 				name : row.team,
 				division : row.division,
 				owner : row.owner,
-				customDivision : row.customdivision
+				customDivision : row.customdivision,
+        gender: row.gender
 			};
 		});
 		var players = sortAndRank(playerBonuses);
@@ -274,17 +275,6 @@ function divisionsBestLineup(promise, stat, custom) {
 	});
 }
 
-// stat - overall, weekly, division, division by week, bonus, bonus by week
-// checkbox (include bonus)
-
-var genderData = {
-	'http://perfectchallenge.fantasy.nfl.com/entry?entryId=2220785':'f',
-	'http://perfectchallenge.fantasy.nfl.com/entry?entryId=2238240':'f',
-	'http://perfectchallenge.fantasy.nfl.com/entry?entryId=2267549':'f',
-	'http://perfectchallenge.fantasy.nfl.com/entry?entryId=2212251':'f',
-	'http://perfectchallenge.fantasy.nfl.com/entry?entryId=2235690':'f'
-};
-
 function genderMap(promise, stat) {
 	return promise.then(function(playerPage) {
 		var players = playerPage.players;
@@ -305,8 +295,7 @@ function genderMap(promise, stat) {
 		genders.push(female);
 		_.each(players, function(player) {
 			var g = male;
-			console.log(player.url);
-			if (genderData[player.url]) {
+			if (player.gender === 'f') {
 				g = female;
 			}
 			g.unverifiedPoints = (g.unverifiedPoints*g.count+player.unverifiedPoints)/(g.count+1);
