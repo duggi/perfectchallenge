@@ -58,7 +58,7 @@ function scarBonusWeekly(week) {
   week = parseInt(week) || calcDefaultWeek();
   var scarSheet = new GoogleSpreadsheet('1345PxfzAi1mz96b801M21KNvcdtcgye3uPl93lk2SWA');
   var getRows = q.nbind(scarSheet.getRows, scarSheet);
-  return getRows( 2).then(function(rows) {
+  return getRows(1).then(function(rows) {
     console.log(rows);
     var playerBonuses = _.map(rows, function(row)  {
       var bonus = 0;
