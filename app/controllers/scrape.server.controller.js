@@ -59,7 +59,6 @@ function scarBonusWeekly(week) {
   var scarSheet = new GoogleSpreadsheet('1345PxfzAi1mz96b801M21KNvcdtcgye3uPl93lk2SWA');
   var getRows = q.nbind(scarSheet.getRows, scarSheet);
   return getRows(1).then(function(rows) {
-    console.log(rows);
     var playerBonuses = _.map(rows, function(row)  {
       var bonus = 0;
       var weekBonus = parseInt(row['week'+week+'bonus']);
@@ -72,7 +71,8 @@ function scarBonusWeekly(week) {
         name : row.team,
         division : row.division,
         owner : row.owner,
-        customDivision : row.customdivision
+        customDivision : row.customdivision,
+        gender: row.gender
       };
     });
     var players = sortAndRank(playerBonuses);
@@ -125,7 +125,6 @@ function addPeonMaster(playersPage) {
 
 function weeklyWithDivisions(stat, bonus, week) {
   return PerfectChallengeScraper.fetchPlayerPage(week).then(function(playerPageWeek) {
-    console.log(playerPageWeek);
     return scarBonusWeekly(playerPageWeek.week).then(function(playerPageBonus) {
       return applyDivisions(playerPageWeek, playerPageBonus, stat, bonus);
     });
@@ -278,6 +277,7 @@ function divisionsBestLineup(promise, stat, custom) {
 
 function genderMap(promise, stat) {
   return promise.then(function(playerPage) {
+    console.log(playerPage);
     var players = playerPage.players;
     var genders = [];
     var male = {
