@@ -1,3 +1,16 @@
+NOTE 10/9/2016: this is the real readme, below is boiler plate from the starter kit which is byzantine and probably outdated
+
+to start app:
+
+1. `rabbitmq-server`
+2. `mongod --dbpath=/usr/local/var/mongodb/`
+3. `grunt` or `node server.js`
+
+
+
+
+--------
+
 [![MEAN.JS Logo](http://meanjs.org/img/logo-small.png)](http://meanjs.org/)
 
 [![Build Status](https://travis-ci.org/meanjs/mean.svg?branch=master)](https://travis-ci.org/meanjs/mean)
