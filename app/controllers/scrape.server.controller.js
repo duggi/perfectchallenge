@@ -18,13 +18,13 @@ function sortAndRank(players) {
 }
 
 function calcDefaultWeek() {
-  var diff = (new Date().getTime() - new Date(2016, 8, 8).getTime())/(7*24*60*60*1000);
+  var diff = (new Date().getTime() - new Date(2017, 8, 7).getTime())/(7*24*60*60*1000);
   return Math.min(17, Math.max(1, Math.floor(diff)+1));
 }
 
 
 function scarBonusOverall() {
-  var scarSheet = new GoogleSpreadsheet('1345PxfzAi1mz96b801M21KNvcdtcgye3uPl93lk2SWA');
+  var scarSheet = new GoogleSpreadsheet('1EsA6zWPCcKcpG9atlSZBssXtTwIMqs7Xa7tmJIwLsOU');
   var getRows = q.nbind(scarSheet.getRows, scarSheet);
   // (1) below is the count position of the scoring tab
   return getRows(1).then(function(rows) {
@@ -56,7 +56,7 @@ function scarBonusOverall() {
 
 function scarBonusWeekly(week) {
   week = parseInt(week) || calcDefaultWeek();
-  var scarSheet = new GoogleSpreadsheet('1345PxfzAi1mz96b801M21KNvcdtcgye3uPl93lk2SWA');
+  var scarSheet = new GoogleSpreadsheet('1EsA6zWPCcKcpG9atlSZBssXtTwIMqs7Xa7tmJIwLsOU');
   var getRows = q.nbind(scarSheet.getRows, scarSheet);
   return getRows(1).then(function(rows) {
     var playerBonuses = _.map(rows, function(row)  {
