@@ -21,6 +21,7 @@ module.exports = {
 			js: [
 				'public/lib/lodash/lodash.js',
 				'public/lib/jquery/dist/jquery.js',
+        'public/lib/jquery-ui/ui/minified/jquery-ui.min.js',
 				'public/lib/jquery.ui/ui/widget.js',
 				'public/lib/blueimp-file-upload/js/jquery.iframe-transport.js',
 				'public/lib/blueimp-file-upload/js/jquery.fileupload.js',

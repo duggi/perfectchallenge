@@ -77,8 +77,46 @@ hr {
 
 /* -------------------------- APP */
 
+#uberbar {
+  background: black;
+  position: fixed;
+  width: 100%;
+  border: none;
+  border-radius: 0;
+  opacity: .8;
+  transition: .3s all ease-in;
+  z-index: 2000;
+}
+#uberbar:hover {
+  opacity: 1;
+}
+#uberbar * {
+  color: #fc3;
+}
+#uberbar a:hover {
+  transition: .2s all ease-in;
+  color: #fff;
+}
+#uberbar .navbar-brand {
+  font-size: 14px;
+  background: #012;
+  color: #def;
+  padding: 8px;
+}
+#uberbar .minilogo {
+  width: 32px;
+  height: 32px;
+  border-radius: 32px;
+  background: #fff;
+}
+
+
+#uberbar .navbar-right {
+  margin-right: 3em;
+}
+
 .app-header {
-  margin: 20px 0;
+  margin: 50px 0 20px;
 }
 
 .logo {

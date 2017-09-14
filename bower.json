@@ -19,6 +19,7 @@
     "cloudinary-jquery": "~2.0.3",
     "cloudinary-jquery-file-upload": "~2.0.3",
     "jquery": "jQuery#~2.1.4",
+    "jquery-ui": "~1.10.3",
     "blueimp-file-upload": "~9.11.2"
   },
   "resolutions": {
