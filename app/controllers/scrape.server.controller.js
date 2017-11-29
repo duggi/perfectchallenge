@@ -116,7 +116,7 @@ function addPeonMaster(playersPage) {
     _.each(playersPage.players, function(player) {
       if (player.unverifiedRank <= 5) {
         player.master = true;
-      } else if (player.unverifiedRank >= 16) {
+      } else if (player.unverifiedRank >= 14) {
         player.peon = true;
       }
     });
