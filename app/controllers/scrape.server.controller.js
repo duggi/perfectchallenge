@@ -7,6 +7,13 @@ var l = require('../utils/logging');
 var q = require('q');
 var _ = require('lodash');
 
+// -- seasonal config
+var seasonStartDate = new Date(2018, 8, 6);
+var scarSheetId = 116NuGlq0AUdNad7TBTSd51mIwT8RmgLszmh1JtuoZro;
+
+
+
+
 function sortAndRank(players) {
   players = _.sortBy(players, function(player) {
     return -1 * player.unverifiedPoints;
@@ -18,13 +25,13 @@ function sortAndRank(players) {
 }
 
 function calcDefaultWeek() {
-  var diff = (new Date().getTime() - new Date(2017, 8, 7).getTime())/(7*24*60*60*1000);
+  var diff = (new Date().getTime() - seasonStartDate.getTime())/(7*24*60*60*1000);
   return Math.min(17, Math.max(1, Math.floor(diff)+1));
 }
 
 
 function scarBonusOverall() {
-  var scarSheet = new GoogleSpreadsheet('1EsA6zWPCcKcpG9atlSZBssXtTwIMqs7Xa7tmJIwLsOU');
+  var scarSheet = new GoogleSpreadsheet(scarSheetId);
   var getRows = q.nbind(scarSheet.getRows, scarSheet);
   // (1) below is the count position of the scoring tab
   return getRows(1).then(function(rows) {
@@ -56,7 +63,7 @@ function scarBonusOverall() {
 
 function scarBonusWeekly(week) {
   week = parseInt(week) || calcDefaultWeek();
-  var scarSheet = new GoogleSpreadsheet('1EsA6zWPCcKcpG9atlSZBssXtTwIMqs7Xa7tmJIwLsOU');
+  var scarSheet = new GoogleSpreadsheet(scarSheetId);
   var getRows = q.nbind(scarSheet.getRows, scarSheet);
   return getRows(1).then(function(rows) {
     var playerBonuses = _.map(rows, function(row)  {

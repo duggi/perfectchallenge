@@ -11,8 +11,16 @@ var qM = require('../utils/queue-manager');
 var random = require('../utils/random');
 var sms = require('../utils/sms');
 
+// -- seasonal config
+var groupId = 75583;
+var groupPath = '/group/' + groupId;
+var seasonStartDate = new Date(2018, 8, 6);
+
+
+
+
 function calcDefaultWeek() {
-	var diff = (new Date().getTime() - new Date(2017, 8, 7).getTime())/(7*24*60*60*1000);
+	var diff = (new Date().getTime() - seasonStartDate.getTime())/(7*24*60*60*1000);
 	return Math.min(17, Math.max(1, Math.floor(diff)+1));
 }
 
@@ -92,7 +100,7 @@ function getRoster(path) {
 }
 
 exports.fetchPlayerPageOverall = function() {
-	return getPlayers('/group/63016?statType=season').then(function(playersPageOverall) {
+	return getPlayers(groupPath + '?statType=season').then(function(playersPageOverall) {
 		return exports.fetchPlayerPage().then(function(playerPageThisWeek) {
 			_.each(playersPageOverall.players, function(playerOverall) {
 				var playerThisWeek = _.find(playerPageThisWeek.players, function(player) {
@@ -118,7 +126,7 @@ function uniqueFbPlayerName(fbPlayer) {
 
 exports.fetchPlayerPage = function(week) {
 	week = week || calcDefaultWeek();
-	return getPlayers('/group/63016?statType=week&statWeek='+week).then(function(playersPage) {
+	return getPlayers(groupPath + '?statType=week&statWeek=' + week).then(function(playersPage) {
 		var players = playersPage.players;
 		var promises = _.map(players, function(player) {
 			return getRoster(player.url+'&week='+week);
