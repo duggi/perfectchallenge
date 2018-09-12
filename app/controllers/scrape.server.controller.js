@@ -9,7 +9,7 @@ var _ = require('lodash');
 
 // -- seasonal config
 var seasonStartDate = new Date(2018, 8, 6);
-var scarSheetId = 116NuGlq0AUdNad7TBTSd51mIwT8RmgLszmh1JtuoZro;
+var scarSheetId = '116NuGlq0AUdNad7TBTSd51mIwT8RmgLszmh1JtuoZro';
 
 
 
