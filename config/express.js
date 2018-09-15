@@ -11,19 +11,13 @@ var express = require('express'),
 	methodOverride = require('method-override'),
 	cookieParser = require('cookie-parser'),
 	helmet = require('helmet'),
-	passport = require('passport'),
-	mongoStore = require('connect-mongo')({
-		session: session
-	}),
+  passport = require('passport'),
 	flash = require('connect-flash'),
 	config = require('./config'),
 	consolidate = require('consolidate'),
 	path = require('path');
-var mongoose = require('mongoose');
 var q = require('q');
 var errorHandler = require('../app/utils/errorHandler');
-
-require('./mongoose-patch');
 
 module.exports = function(db) {
 	// Initialize express app
