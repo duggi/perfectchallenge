@@ -172,6 +172,12 @@ hr {
   font-weight: bold;
 }
 
+.perfect {
+  color: rgb(210, 178, 4);
+  font-weight: bold;
+  background-color: #f5f3c1;
+}
+
 .bandwagon {
   color: firebrick;
   font-weight: bold;

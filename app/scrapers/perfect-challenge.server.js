@@ -77,11 +77,14 @@ function getRoster(path) {
 		var fbPlayers = [];
 		slots.each(function(i, slot) {
 			var fbPlayer = {
-				position : $('.position', slot).text(),
-			};
-			if ($('.first-name', slot).text() || $('.last-name', slot).text()) {
-				fbPlayer.firstName = $('.first-name', slot).text();
-				fbPlayer.lastName = $('.last-name', slot).text();
+        position : $('.position', slot).text(),
+        isPerfectChoice : $('.multiplier-band', slot).length > 0
+      }, firstName = $('.first-name', slot).text().trim(),
+         lastName = $('.last-name', slot).text().trim();
+
+			if (firstName || lastName) {
+				fbPlayer.firstName = firstName;
+				fbPlayer.lastName = lastName;
 				var statusAndScore = $('.sg', slot).text();
 				fbPlayer.status = statusAndScore.split(',')[0];
 				fbPlayer.pct = parseFloat($('.pct em', slot).text());
