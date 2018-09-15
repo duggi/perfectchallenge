@@ -4,8 +4,7 @@
   "version": "0.0.1",
   "author": "Jesse Hull",
   "engines": {
-    "node": "0.10.x",
-    "npm": "1.4.x"
+    "node": "8.9.x"
   },
   "scripts": {
     "start": "grunt",
