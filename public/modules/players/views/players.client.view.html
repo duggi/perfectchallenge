@@ -80,7 +80,7 @@
               </td>
               <td data-title="Known Positions" ng-show="showPositions">
                 <span ng-repeat="fbPlayer in player.roster">
-                  <span ng-show="fbPlayer.known" class="fb-player-stat-line {{(fbPlayer.isPerfectChoice?'perfect':'') + (fbPlayer.timesPicked===1?'unique':fbPlayer.timesPicked>=9?'bandwagon':'')}}">
+                  <span ng-show="fbPlayer.known" class="fb-player-stat-line {{(fbPlayer.isPerfectChoice?'perfect':'') + ' ' + (fbPlayer.timesPicked===1?'unique':fbPlayer.timesPicked>=9?'bandwagon':'')}}">
                     <small class="pill-label position-label">{{fbPlayer.position}}:</small>
                     {{fbPlayer.firstName | limitTo : 1}} {{fbPlayer.lastName}}
                     <span ng-show="fbPlayer.team"> - {{fbPlayer.team}}</span>
