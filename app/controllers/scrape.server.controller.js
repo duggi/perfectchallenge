@@ -96,6 +96,10 @@ function applyDivisions(playerPageOverall, playerPageBonus, stat, bonus) {
     var playerBonus = _.find(playerPageBonus.players, function(playerBonus) {
       return playerOverall.url === playerBonus.url;
     });
+    if (!playerBonus) {
+      console.log('no playerBonus found!', playerOverall);
+      return;
+    }
     if (bonus) {
       playerOverall.unverifiedPoints += playerBonus.unverifiedPoints;
     }
